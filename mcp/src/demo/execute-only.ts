@@ -26,10 +26,12 @@ async function main() {
     return;
   }
 
+  // Matches server.ts: SDK/Zod generic inference exceeds TypeScript's depth limit.
+  // Runtime validation still uses the Zod schema supplied below.
   const server = new McpServer({
     name: 'suiteql-execution-only',
     version: '1.0.0',
-  });
+  }) as any;
 
   server.registerTool(
     ServerTools.EXECUTE_SUITEQL_QUERY,
@@ -43,7 +45,7 @@ async function main() {
         row_limit: true,
       }).shape,
     },
-    async args => ({ content: await handleSuiteQLTool(args) })
+    async (args: any) => ({ content: await handleSuiteQLTool(args) })
   );
 
   await server.connect(new StdioServerTransport());
