@@ -8,5 +8,20 @@ updates:
     groups:
       npm-development-dependencies:
         dependency-type: development
+        update-types: [minor, patch]
       npm-production-dependencies:
         dependency-type: production
+        update-types: [minor, patch]
+    # Major upgrades change generated app templates and code samples, so they
+    # are planned as individual PRs instead of arriving in a weekly group.
+    ignore:
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      github-actions:
+        patterns: ['*']
