@@ -1,7 +1,8 @@
 # Support
 
-Use GitHub Discussions for usage questions and the issue tracker for confirmed
-reproducible defects. This project does not provide guaranteed response times or
+Open an issue with the **Question** form for usage questions and the **Bug
+report** form for reproducible defects. Run `npm run doctor` before reporting a
+setup problem. This project does not provide guaranteed response times or
 production support.
 
 Include the SuiteReact version, Node.js version, NetSuite feature context, and a
