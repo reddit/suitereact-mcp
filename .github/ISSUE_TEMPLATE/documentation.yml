@@ -1,0 +1,23 @@
+name: Documentation
+description: Report missing, outdated, or unclear documentation.
+labels: [documentation]
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Page or file
+      placeholder: docs/setup.md or a URL
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue
+    attributes:
+      label: What is wrong or missing?
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested change

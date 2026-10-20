@@ -1,0 +1,30 @@
+name: Question
+description: Ask a usage or setup question. Check the docs and `npm run doctor` first.
+labels: [question]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Start with the [README](https://github.com/reddit/suitereact-mcp#readme) and [setup guide](https://github.com/reddit/suitereact-mcp/blob/main/docs/setup.md). This project has no guaranteed response times or production support.
+
+        Do not include credentials, account IDs, or NetSuite record data.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: What are you trying to accomplish, and where are you stuck?
+    validations:
+      required: true
+
+  - type: textarea
+    id: tried
+    attributes:
+      label: What have you tried?
+      description: Docs you read, commands you ran, and what happened.
+
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      placeholder: 0.1.0 or a commit SHA

@@ -1,24 +1,129 @@
 name: Bug report
-description: Report a reproducible defect. Use private vulnerability reporting for security issues.
+description: Report a reproducible defect in the MCP server, SuiteReact library, proxy, apps, or tooling.
+labels: [bug, triage]
 body:
   - type: markdown
     attributes:
-      value: Do not include credentials, account IDs, or NetSuite record data.
+      value: |
+        **Security issues:** use [private vulnerability reporting](https://github.com/reddit/suitereact-mcp/security/advisories/new), not this form.
+
+        **Redact before posting.** Do not include credentials, tokens, NetSuite account IDs, record data, employee or customer names, or unredacted logs. Replace them with placeholders such as `<ACCOUNT_ID>`.
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options:
+        - MCP server (mcp-server-netsuite)
+        - SuiteReact library
+        - Local proxy (server)
+        - App scaffolding or code generation
+        - SDF objects, RESTlets, or Suitelets
+        - Bundled app (approval-manager, data-viewer, doc-spaces, invoice-pdf, script-logs, suiteql-bot)
+        - Setup, doctor, build, or deploy scripts
+        - Agent skills or prompts
+        - Other or not sure
+    validations:
+      required: true
+
   - type: textarea
     id: description
     attributes:
-      label: Description
+      label: What happened?
+      description: Describe the defect and its impact.
     validations:
       required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+
   - type: textarea
     id: reproduction
     attributes:
       label: Minimal reproduction
+      description: Exact commands, MCP tool calls, or UI steps. Include the smallest SuiteQL query or app code that reproduces it.
+      placeholder: |
+        1. npm run setup
+        2. Call `execute_suiteql_query` with `SELECT id FROM customer`
+        3. ...
     validations:
       required: true
+
   - type: input
     id: version
     attributes:
       label: Version or commit
+      placeholder: 0.1.0 or a commit SHA
     validations:
       required: true
+
+  - type: input
+    id: node
+    attributes:
+      label: Node.js and npm versions
+      placeholder: Node 22.x, npm 10.x
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - macOS
+        - Linux
+        - Windows
+        - Windows (WSL)
+
+  - type: dropdown
+    id: client
+    attributes:
+      label: MCP client or agent
+      description: Only for MCP server, scaffolding, or skill issues.
+      options:
+        - Not applicable
+        - Claude Code
+        - Cursor
+        - Codex
+        - VS Code
+        - Other (describe below)
+
+  - type: dropdown
+    id: netsuite
+    attributes:
+      label: NetSuite environment type
+      description: Environment type only. Do not include account IDs.
+      options:
+        - Not applicable
+        - Sandbox
+        - Release preview
+        - Development account
+        - Production
+
+  - type: textarea
+    id: doctor
+    attributes:
+      label: '`npm run doctor` output'
+      description: Required for setup, auth, or connectivity problems. Redact account identifiers.
+      render: shell
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs or errors
+      description: Redacted stack traces, MCP error envelopes, or browser console output.
+      render: shell
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues and this is not a duplicate.
+          required: true
+        - label: I removed credentials, account IDs, and NetSuite record data from this report.
+          required: true

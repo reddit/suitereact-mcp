@@ -1,0 +1,67 @@
+name: Feature request
+description: Propose a new capability or a change to existing behavior.
+labels: [enhancement, triage]
+body:
+  - type: markdown
+    attributes:
+      value: For substantial behavioral or architectural changes, agree on the approach here before opening a pull request. See [CONTRIBUTING.md](https://github.com/reddit/suitereact-mcp/blob/main/CONTRIBUTING.md).
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options:
+        - MCP server (mcp-server-netsuite)
+        - SuiteReact library
+        - Local proxy (server)
+        - App scaffolding or code generation
+        - SDF objects, RESTlets, or Suitelets
+        - Bundled app
+        - Setup, doctor, build, or deploy scripts
+        - Agent skills or prompts
+        - Documentation
+        - Other or not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What are you trying to do, and what gets in the way today? Describe the NetSuite workflow or use case.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: How should it work? Include example MCP tool calls, APIs, or UI if helpful.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Workarounds you use today or other approaches you rejected.
+
+  - type: checkboxes
+    id: impact
+    attributes:
+      label: Security and permissions impact
+      description: Check any that apply. These changes need a security review.
+      options:
+        - label: Adds or changes access to NetSuite data or records
+        - label: Adds a write, delete, or approval action
+        - label: Changes authentication, roles, or deployment audiences
+        - label: Calls an external provider (for example, an LLM API)
+
+  - type: dropdown
+    id: contribute
+    attributes:
+      label: Would you contribute this?
+      options:
+        - Yes, I can open a pull request
+        - Maybe, with guidance
+        - No

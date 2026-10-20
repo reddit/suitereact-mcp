@@ -1,5 +1,8 @@
-blank_issues_enabled: true
+blank_issues_enabled: false
 contact_links:
   - name: Security vulnerability
     url: https://github.com/reddit/suitereact-mcp/security/advisories/new
-    about: Report vulnerabilities privately.
+    about: Report vulnerabilities privately. Never open a public issue for a security problem.
+  - name: Setup guide
+    url: https://github.com/reddit/suitereact-mcp/blob/main/docs/setup.md
+    about: Bootstrap RESTlets, OAuth, and the local proxy. Run `npm run doctor` before filing a setup bug.
