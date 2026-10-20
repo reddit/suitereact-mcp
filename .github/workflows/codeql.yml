@@ -8,6 +8,7 @@ on:
     - cron: '17 8 * * 1'
 
 permissions:
+  actions: read
   contents: read
   security-events: write
 
