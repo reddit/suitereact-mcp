@@ -9,7 +9,7 @@ A SuiteReact app for writing, running, and exploring SuiteQL queries against Net
 - **Results grid** — MUI X DataGrid showing values exactly as NetSuite returned them, with exact field names, content-sized columns, type-aware sorting, search, and filtering
 - **Result status** — rows, columns, and elapsed time for the last run; an **Edits not run** flag when the editor no longer matches the results; and a warning when NetSuite returns its 5,000-row limit
 - **AI assistant** — collapsible, width-adjustable right-side panel chatbot (`NsReactChatbot`, open by default) with NetSuite-focused system context that can suggest SuiteQL queries, auto-fill the editor, and auto-run the suggested query
-- **Approved model catalog** — app-specific ChatGPT and OpenRouter choices, defaulting to `gpt-5.6-sol`
+- **Approved model catalog** — eight app-specific OpenAI and OpenRouter choices, defaulting to `gpt-6.1-sol`
 - **Query history** — browser-persisted drawer with LLM-generated titles, SQL previews, timestamps, result counts, and per-query removal (deduped and capped at 50). Handwritten SQL receives a table-based fallback title
 - **CSV export** of raw values with exact field names; formula-like text is prefixed with an apostrophe
 - **Descriptive error handling** — SuiteScript errors are parsed end-to-end (server wraps the query text; client extracts error code, message, and detail). The error alert shows contextual hints for common error codes and includes the failed query for easy debugging
@@ -97,3 +97,41 @@ Queries need no SuiteReact role list. The AI assistant goes through the separate
 | `custsecret_openai_api_key`                      | API secret                    | OpenAI models, including the default model.                                                                                                     |
 | `custsecret_openrouter_api_key`                  | API secret                    | OpenRouter models.                                                                                                                              |
 | `custscript_sr_suiteql_bot_ns_window`            | Suitelet parameter (checkbox) | Checked: the app opens inside NetSuite's navigation. Unchecked: it opens as a full page.                                                        |
+
+## Assistant models
+
+The picker is defined in [src/config/models.ts](src/config/models.ts). Roles are
+selection guidance; provider availability and query quality must be verified in
+your account.
+
+| Model                               | Route      | Intended role       |
+| ----------------------------------- | ---------- | ------------------- |
+| `gpt-6.1-sol`                       | OpenAI     | Default             |
+| `gpt-6-luna`                        | OpenAI     | Quick queries       |
+| `gpt-6-astra`                       | OpenAI     | Complex reasoning   |
+| `anthropic/claude-sonnet-5.5`       | OpenRouter | Everyday SQL        |
+| `anthropic/claude-opus-5.5`         | OpenRouter | Difficult SQL       |
+| `google/gemini-4-argon`             | OpenRouter | Large context       |
+| `deepseek/deepseek-v4.1-flash-1017` | OpenRouter | Fast alternative    |
+| `z-ai/glm-5.3`                      | OpenRouter | General alternative |
+
+To enable all eight choices, set `custscript_sr_llm_models` on the LLM proxy
+deployment to this CSV (or enable a narrower subset). Replace retired pairs
+when updating an existing deployment. This example does not change account
+configuration or enable deployment defaults:
+
+```text
+openai:gpt-6.1-sol,openai:gpt-6-luna,openai:gpt-6-astra,openrouter:anthropic/claude-sonnet-5.5,openrouter:anthropic/claude-opus-5.5,openrouter:google/gemini-4-argon,openrouter:deepseek/deepseek-v4.1-flash-1017,openrouter:z-ai/glm-5.3
+```
+
+Both hosted and local development requests reach `sr_rl_llm_proxy`. It retains
+Chat Completions with `response_format: json_schema`; query generation uses no
+tool calls. The proxy omits `temperature` and `top_p` for direct GPT-6 requests
+with provider-default reasoning, and maps the chatbot's `max_tokens: 15000` to
+OpenAI's `max_completion_tokens`. OpenRouter retains `max_tokens` and sampling
+controls. See the official [GPT-6 compatibility guidance](https://developers.openai.com/api/docs/guides/latest-model?model=gpt-6-astra)
+and [Chat Completions request reference](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create).
+
+Updating the picker requires deploying the app and the changed LLM proxy together,
+then configuring the account allowlist and provider secrets. Repository checks
+use mocks; they do not establish live model access or NetSuite validation.

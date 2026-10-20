@@ -93,8 +93,11 @@ const assertAuthorizedRequest = (request: LLMProxyRequest): void => {
   }
 };
 
-const supportsCustomTemperature = (request: LLMProxyRequest): boolean => {
+const supportsCustomSampling = (request: LLMProxyRequest): boolean => {
   if (request.provider !== 'openai') return true;
+
+  // GPT-6 requests use provider-default reasoning, which excludes sampling controls.
+  if (/^gpt-6(?:[.-]|$)/i.test(request.model)) return false;
 
   const versionMatch = request.model.match(/^gpt-5\.(\d+)(?:[.-]|$)/i);
   return !versionMatch || Number(versionMatch[1]) < 4;
@@ -112,10 +115,10 @@ const forwardToProvider = (request: LLMProxyRequest): LLMProxyResponse => {
     const payload: Record<string, any> = {
       model: request.model,
       messages: request.messages,
-      temperature: supportsCustomTemperature(request)
+      temperature: supportsCustomSampling(request)
         ? request.temperature
         : undefined,
-      top_p: request.top_p,
+      top_p: supportsCustomSampling(request) ? request.top_p : undefined,
       frequency_penalty: request.frequency_penalty,
       presence_penalty: request.presence_penalty,
       stream: request.stream,

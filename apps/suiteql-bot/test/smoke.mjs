@@ -8,23 +8,14 @@ const AI_QUERY =
 const MANUAL_QUERY =
   'select id, companyname from customer where email is not null and rownum <= 1';
 const EXPECTED_MODELS = [
-  'gpt-5.6-sol (ChatGPT)',
-  'gpt-5.6-terra (ChatGPT)',
-  'gpt-5.6-luna (ChatGPT)',
-  'gpt-5.5-2026-04-23 (ChatGPT)',
-  'gpt-5.4-2026-03-05 (ChatGPT)',
-  'xiaomi/mimo-v2.5 (OpenRouter)',
-  'deepseek/deepseek-v4-flash (OpenRouter)',
-  'deepseek/deepseek-v4-pro (OpenRouter)',
-  'minimax/minimax-m3 (OpenRouter)',
-  'z-ai/glm-5.2 (OpenRouter)',
-  'moonshotai/kimi-k2.6 (OpenRouter)',
-  'anthropic/claude-sonnet-4.6 (OpenRouter)',
-  'anthropic/claude-opus-4.7 (OpenRouter)',
-  'anthropic/claude-opus-4.8 (OpenRouter)',
-  'google/gemini-3-flash-preview (OpenRouter)',
-  'google/gemini-3.1-flash-lite (OpenRouter)',
-  'google/gemini-3.5-flash (OpenRouter)',
+  'GPT-6.1 Sol (OpenAI) — Default',
+  'GPT-6 Luna (OpenAI) — Quick queries',
+  'GPT-6 Astra (OpenAI) — Complex reasoning',
+  'Claude Sonnet 5.5 (OpenRouter) — Everyday SQL',
+  'Claude Opus 5.5 (OpenRouter) — Difficult SQL',
+  'Gemini 4 Argon (OpenRouter) — Large context',
+  'DeepSeek V4.1 Flash 1017 (OpenRouter) — Fast alternative',
+  'GLM 5.3 (OpenRouter) — General alternative',
 ];
 let generatedHistoryTitle = '';
 let lastExecutedQuery = '';

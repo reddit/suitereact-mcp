@@ -199,7 +199,9 @@ SuiteQL Bot and other AI-enabled apps use server-side provider credentials.
 Configure the NetSuite API secrets `custsecret_openai_api_key` or
 `custsecret_openrouter_api_key`, then set `custscript_sr_llm_role_ids` and
 explicit `provider:model` pairs in `custscript_sr_llm_models` on the LLM proxy.
-The selected model must be supported by the configured provider.
+The selected model must be supported by the configured provider. SuiteQL Bot's
+[model catalog and copyable allowlist](../apps/suiteql-bot/README.md#assistant-models)
+list its eight supported choices and default.
 
 Local application AI calls also pass through the NetSuite LLM proxy, so they
 use those account-side secrets and allowlists. The optional `OPENAI_API_KEY` in

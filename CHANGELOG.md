@@ -26,6 +26,10 @@ All notable changes to this project will be documented here. The project uses
 
 ### Changed
 
+- SuiteQL Bot now offers eight approved OpenAI and OpenRouter models, defaults
+  to GPT-6.1 Sol, and labels each choice with its route and intended role. The
+  LLM proxy omits sampling controls for direct GPT-6 requests.
+
 - **Authorization uses native NetSuite permissions.** The action handler's
   deployment audience decides who can call it. Query actions require
   SuiteAnalytics Workbook (View) instead of `custscript_sr_query_role_ids`, and
