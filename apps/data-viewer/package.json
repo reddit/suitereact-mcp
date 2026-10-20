@@ -13,14 +13,14 @@
     "lint:fix": "cd ../.. && eslint 'apps/data-viewer/src/**/*.{ts,tsx}' --fix"
   },
   "devDependencies": {
-    "@hitc/netsuite-types": "^2024.2.2",
-    "@types/node": "^20.11.25",
+    "@hitc/netsuite-types": "^2026.2.4",
+    "@types/node": "^26.6.5",
     "@types/react": "^18.2.64",
     "@types/react-dom": "^18.2.21",
-    "@vitejs/plugin-react": "^4.2.1",
-    "typescript": "^5.4.2",
-    "vite": "^6.3.5",
-    "vite-tsconfig-paths": "^4.3.1"
+    "@vitejs/plugin-react": "^6.1.2",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4",
+    "vite-tsconfig-paths": "^6.1.1"
   },
   "engines": {
     "node": ">=22"
