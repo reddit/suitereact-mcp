@@ -1,0 +1,24 @@
+<customlist scriptid="customlist_sr_perm_principal">
+  <name>SR | Permission Principal Type</name>
+  <description>What kind of identity a permission grants to.</description>
+  <isinactive>F</isinactive>
+  <isordered>F</isordered>
+  <ismatrixoption>F</ismatrixoption>
+  <customvalues>
+    <customvalue scriptid="val_employee">
+      <value>employee</value>
+      <abbreviation></abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_dyngroup">
+      <value>dyngroup</value>
+      <abbreviation></abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_everyone">
+      <value>everyone</value>
+      <abbreviation></abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+  </customvalues>
+</customlist>

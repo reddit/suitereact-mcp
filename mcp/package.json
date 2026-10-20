@@ -1,0 +1,63 @@
+{
+  "name": "mcp-server-netsuite",
+  "version": "0.1.0",
+  "description": "MCP server for building and operating SuiteReact applications in NetSuite",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "npm run validate:samples && npm run delete:dist && tsc && npm run validate:scaffolds && npm run copy:resources",
+    "typecheck": "tsc --noEmit",
+    "copy:resources": "copyfiles -u 1 src/resources/* dist",
+    "delete:dist": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "clean": "rm -rf dist",
+    "rebuild-vectors": "npm run build && node ./src/build/rebuild-vector-db.js",
+    "test-rag": "npm run build && node ./src/build/test-rag-assistant.js",
+    "test-rag-fallback": "npm run build && node ./src/build/test-rag-fallback.js",
+    "test:execute-only": "node --test test/execute-only.test.mjs",
+    "validate:samples": "node ../deploy/validate-code-samples.mjs",
+    "validate:scaffolds": "node ../deploy/validate-generated-scaffolds.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.15.0",
+    "dotenv": "^17.1.0",
+    "openai": "4.24.1",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "copyfiles": "^2.4.1",
+    "tsx": "^4.6.0",
+    "typescript": "5.3.3"
+  },
+  "keywords": [
+    "mcp",
+    "netsuite",
+    "suiteql",
+    "model-context-protocol"
+  ],
+  "author": "",
+  "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reddit/suitereact-mcp.git",
+    "directory": "mcp"
+  },
+  "homepage": "https://github.com/reddit/suitereact-mcp/tree/main/mcp#readme",
+  "bugs": {
+    "url": "https://github.com/reddit/suitereact-mcp/issues"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "example.env"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "es6",
+    "useDefineForClassFields": true,
+    "lib": ["es6", "es5", "es2015.promise", "dom", "es2015.iterable", "es2019"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "amd",
+    "moduleResolution": "Node",
+    "jsx": "react-jsx",
+    "paths": {
+      "N": ["./node_modules/@hitc/netsuite-types/N"],
+      "N/*": ["./node_modules/@hitc/netsuite-types/N/*"],
+      "suitereact-server": ["./sdf/domain/suitereact.ts"]
+    },
+    "outDir": "dist/FileCabinet/SuiteScripts",
+    "rootDir": "."
+  },
+  "exclude": [
+    "node_modules",
+    "**/node_modules/**",
+    "suitereact/**/*",
+    "suitecloud.config.js"
+  ],
+  "include": [
+    "sdf/**/*.js",
+    "sdf/**/*.min.js",
+    "sdf/**/*.ts",
+    "**/suitelet/*.ts"
+  ]
+}

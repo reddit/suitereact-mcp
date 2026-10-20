@@ -1,0 +1,10 @@
+node_modules/
+dist/
+sdfTs/application/assets/emailTemplates/
+sdfTs/application/assets/templates/
+sdfJs/**/*.html
+sdfReact/**/client/**
+**/*.min.js
+Objects/templates/emailTemplates/*
+**/client/**
+**/.vectordb

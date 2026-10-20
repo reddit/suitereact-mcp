@@ -1,0 +1,170 @@
+{
+  "metadata": {
+    "version": "2.0.0",
+    "framework": "SuiteReact",
+    "description": "Client and server action patterns for freeform React apps (REST-first; no declarative grid / form-grid helpers)"
+  },
+  "clientSide": {
+    "description": "Client code is standard React: hooks, component state, and context. Use suitereact for NetSuite I/O and shared UI helpers—not for building page layouts from row/column schemas.",
+    "overview": "Typical responsibilities: collect user input in React state; call server actions via handleRestletAction; update UI from typed action DTOs; show toasts with ToastProvider + useToastHelpers; handle structured AI output from NsReactChatbot via onStructuredResponse and Zod parsing.",
+    "callingServerActions": {
+      "REST": {
+        "description": "Low-level hosted-Suitelet client for invoking SuiteScript actions. Prefer handleRestletAction for code that must also run in local Vite development.",
+        "import": "import { REST } from 'suitereact';",
+        "pattern": "const { data, error } = await REST.post({ action: 'myServerAction', data: { customerId, fromDate } });",
+        "notes": [
+          "`action` is the exported function name in sdf/actions (resolved by the RESTlet handler).",
+          "`data` is a plain object; define matching TypeScript types in domain/types.ts on the client and shared shapes on the server.",
+          "Inspect `error` for transport/parsing failures. On success, `data` is already the action's DTO because REST.post unwraps the handler-owned transport envelope exactly once.",
+          "Do not add a second `{ success, data, error }` envelope inside action modules."
+        ]
+      },
+      "handleRestletAction": {
+        "description": "Default environment-transparent wrapper: it uses a local dev proxy when `apiBaseUrl` is set and REST.post against the hosted Suitelet otherwise.",
+        "import": "import { handleRestletAction } from 'suitereact';",
+        "pattern": "const proxyBase = import.meta.env.DEV ? import.meta.env.VITE_PROXY_SERVER_BASE_URL : undefined; const proxyToken = import.meta.env.DEV ? import.meta.env.VITE_PROXY_SERVER_TOKEN : undefined; const result = await handleRestletAction('myServerAction', payload, proxyBase, proxyToken);",
+        "notes": [
+          "Use during `npm run dev` with `npm run server` and matching VITE_PROXY_SERVER_BASE_URL and VITE_PROXY_SERVER_TOKEN values in .env.development.local.",
+          "Never place the proxy URL in .env or a production-mode env file; validate:app rejects loopback URLs in compiled bundles.",
+          "Omit the proxy URL and token in production so calls stay in-browser to NetSuite.",
+          "It resolves to the action DTO and throws when the proxy or RESTlet reports a failure; catch errors at the UI boundary."
+        ]
+      }
+    },
+    "stateManagement": {
+      "description": "Use React useState, useReducer, useContext, or small custom hooks for form and view state.",
+      "patterns": [
+        "Colocate state in the component or a feature hook (e.g. useCustomerFilters).",
+        "Pass explicit DTOs to handleRestletAction—avoid relying on implicit 'element' arrays.",
+        "For derived data, useMemo; for async side effects, useEffect with stable dependencies.",
+        "Reset loading/error flags in finally blocks or after each request."
+      ]
+    },
+    "performance": {
+      "description": "Keep browser work responsive for large NetSuite results and file exports.",
+      "patterns": [
+        "Do not store large base64 PDFs/files in React state.",
+        "For zip/export flows, prefer Blob/ArrayBuffer paths and @zip.js/zip.js over JSZip + atob loops.",
+        "Cap concurrency for client-triggered NetSuite work.",
+        "Show progress and partial failures for long-running actions.",
+        "Use pagination or keyset loading for large tables."
+      ]
+    },
+    "toasts": {
+      "description": "User feedback from actions",
+      "hooks": "Wrap the app with ToastProvider; use useToastHelpers() for showSuccess, showError, showWarning, showInfo.",
+      "imperative": "toastService is available for rare non-hook code paths."
+    },
+    "chatbotStructuredOutput": {
+      "description": "NsReactChatbot can return JSON matching a Zod schema.",
+      "flow": [
+        "Define a Zod schema in domain/types.ts (or next to the component).",
+        "Pass structuredOutput: { name, schema } to NsReactChatbot.",
+        "Handle results with onStructuredResponse={(data) => { ... }} — parse with schema.safeParse(data) before updating state.",
+        "Drive downstream UI (tables, query runners, detail panels) from parsed state—not from legacy onResponse/handleAction chains."
+      ],
+      "deprecated": "onResponse + handleAction — migrate to onStructuredResponse."
+    },
+    "lintCompliance": {
+      "description": "App ESLint must pass in CI and in npm run build:app.",
+      "requirements": [
+        "No console.log in production client code where rules forbid it.",
+        "No unused variables/imports; prefix unused params with `_`.",
+        "Use explicit types for public action payloads and responses."
+      ]
+    },
+    "removedPatterns": {
+      "description": "Do not use declarative grid helpers for new apps:",
+      "avoid": [
+        "getElement, upsertElement, getElementsFromRows, appendElementsToGridRow",
+        "Client actions driven by updateRows / NsReactFormGridElementProps[][]",
+        "NsReactFieldType grid fields as the primary UI model"
+      ]
+    }
+  },
+  "serverSide": {
+    "description": "Server-side actions are SuiteScript 2.1 modules in sdf/actions. They perform NetSuite work and return JSON-serializable results to the RESTlet.",
+    "overview": "Keep server actions free of React or MUI. Accept the typed payload sent by handleRestletAction. Use N/* modules for records, search, query, files, and logging.",
+    "structure": {
+      "annotations": "Use @NApiVersion 2.1 and @NModuleScope Public where applicable.",
+      "parameters": "Define explicit TypeScript interfaces for the props object your RESTlet passes (e.g. { customerId: string; filters: Filters }).",
+      "separation": "Return a typed JSON-serializable DTO on success and throw an Error on failure. The action-handler RESTlet owns the outer { success, data, error } transport envelope. Never return UI component definitions."
+    },
+    "modules": {
+      "N/record": {
+        "description": "Create, load, update records",
+        "example": "const rec = record.load({ type: record.Type.CUSTOMER, id: 123, isDynamic: true });"
+      },
+      "N/search": {
+        "description": "Saved searches and ad-hoc searches"
+      },
+      "N/query": {
+        "description": "SuiteQL — preferred for complex reporting",
+        "runSuiteQL": "const resultSet = query.runSuiteQL({ query: suiteQL });\nconst rows = resultSet.asMappedResults();"
+      },
+      "N/log": {
+        "description": "Use log.debug / log.error — never console.log in SuiteScript."
+      },
+      "N/file": {
+        "description": "File create/load for attachments and generated documents."
+      },
+      "N/render": {
+        "description": "PDF rendering and advanced printing."
+      }
+    },
+    "utility": {
+      "transportEnvelope": {
+        "description": "sr_rl_rct_action_handler wraps successful action DTOs and thrown errors for transport. Action modules must not call successResponse or errorResponse themselves."
+      },
+      "legacyNote": {
+        "description": "getElementValue(id, elements) applied to legacy declarative forms that sent an `elements` array. Freeform apps should send typed fields in `data` instead and parse them directly on the server."
+      }
+    },
+    "commonPatterns": {
+      "suiteQL": {
+        "description": "ALWAYS validate SuiteQL with the MCP EXECUTE_SUITEQL_QUERY (or suiteql_query_assistant) tools before shipping.",
+        "workflow": [
+          "Draft query",
+          "Test with EXECUTE_SUITEQL_QUERY",
+          "Parameterize and add RowNum / filters",
+          "Implement in server action and return rows to the client"
+        ]
+      },
+      "typedPayload": {
+        "description": "Example server handler signature",
+        "example": "interface LoadInvoicesResponse { invoices: InvoiceRow[]; }\n\nexport const loadInvoices = (props: { customerId: string; startDate?: string }): LoadInvoicesResponse => {\n  try {\n    const { customerId, startDate } = props;\n    if (!customerId) throw new Error('customerId required');\n    // ... N/query or N/search ...\n    return { invoices: [] };\n  } catch (error) {\n    log.error({ title: 'loadInvoices', details: error });\n    throw error;\n  }\n};"
+      },
+      "fileExport": {
+        "description": "Prefer returning File Cabinet file IDs/URLs or small batches of file metadata. Only return inline base64/data URLs when the browser must assemble the final artifact locally.",
+        "notes": [
+          "PDF generation with N/render is expensive; cap batch sizes and return partial failure details.",
+          "Avoid returning duplicate file content.",
+          "For large export jobs, consider Map/Reduce or staged File Cabinet output."
+        ]
+      }
+    },
+    "bestPractices": [
+      "Validate inputs at the start of the handler; fail fast with clear errors.",
+      "Use SuiteQL for flexible reporting; test queries before deployment.",
+      "Keep governance in mind (limits, pagination, map/reduce for heavy work).",
+      "Return only data the client needs; avoid large blobs unless required.",
+      "Use log.error for exceptions; include minimal context for supportability."
+    ]
+  },
+  "integration": {
+    "clientToServer": {
+      "description": "React state → handleRestletAction(action, payload, proxyBase) → RESTlet → sdf/actions function → typed DTO → React state update.",
+      "ai": "Structured chatbot output → onStructuredResponse → parse → optional handleRestletAction call to run SuiteQL or load records."
+    }
+  },
+  "advanced": {
+    "suiteQL": {
+      "testingWorkflow": [
+        "Draft SuiteQL",
+        "Run suiteql_query_assistant / EXECUTE_SUITEQL_QUERY",
+        "Refine JOINs and BUILTIN.DF",
+        "Embed in server action"
+      ]
+    }
+  }
+}

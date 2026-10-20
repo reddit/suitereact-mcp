@@ -1,0 +1,84 @@
+---
+description: 'Freeform React + MUI conventions for SuiteReact apps'
+globs: 'apps/**/src/**/*'
+---
+
+# SuiteReact App Patterns
+
+## App Structure Convention
+
+```
+apps/<name>/src/
+├── main.tsx           # Entry: ThemeProvider, CssBaseline, App
+├── App/
+│   ├── App.tsx        # Main shell: layout, state, REST calls
+│   └── theme.ts       # MUI createTheme customization
+├── domain/
+│   ├── views/         # React components per view/tab
+│   ├── actions/       # clientActions.ts (handleRestletAction wrappers)
+│   ├── schemas/       # Zod schemas (for structured AI output)
+│   └── types.ts       # App-specific TypeScript interfaces
+└── utils/             # Column defs, formatters, helpers
+```
+
+## State Management
+
+- Use React `useState` / `useEffect` for simple apps
+- Use TanStack Query (`@tanstack/react-query`) for complex data fetching
+- NO grid `rows` tree — manage state directly with React patterns
+- Do not store large PDF/base64/file payloads in React state; keep them as Blob/ArrayBuffer/object URLs when possible
+- Disable buttons while expensive actions are running and show progress for bulk work
+
+## NetSuite Data Access
+
+```typescript
+import { handleRestletAction } from 'suitereact';
+
+const proxyBaseUrl = import.meta.env.DEV
+  ? import.meta.env.VITE_PROXY_SERVER_BASE_URL
+  : undefined;
+
+const result = await handleRestletAction('myAction', payload, proxyBaseUrl);
+```
+
+Use `handleRestletAction` as the default environment-transparent client helper. Use `REST.post` directly only for code that runs exclusively inside a hosted NetSuite Suitelet.
+
+Store the local proxy URL only in `.env.development.local`. Guard direct reads with `import.meta.env.DEV`; production builds must leave the third argument undefined. `npm run validate:app -- <app-name>` rejects bundles containing loopback URLs or the configured development proxy URL.
+
+## UI Components
+
+- Use MUI components directly: Container, Box, Paper, TextField, Button, Select, Tabs, Drawer, Dialog
+- Use MUI X DataGrid for tables (sorting, filtering, pagination built-in)
+- Use NsReactChatbot from suitereact for AI chat features
+- Use ToastProvider + toastService from suitereact for notifications
+- Do NOT use NsReactField, NsReactFormGridRow, or grid schema patterns
+
+## Performance Defaults
+
+- Paginate or keyset-load large datasets instead of fetching every row into the browser
+- For PDFs and zip/export flows, prefer Blob/ArrayBuffer paths and `@zip.js/zip.js`; avoid `JSZip + atob` loops for large file sets
+- Cap concurrency for client-triggered NetSuite work
+- Run `npm run review:app -- <app-name>` before commit to catch legacy patterns and performance red flags
+
+## NsReactChatbot Usage
+
+```typescript
+import { NsReactChatbot } from 'suitereact';
+
+const proxyBaseUrl = import.meta.env.DEV
+  ? import.meta.env.VITE_PROXY_SERVER_BASE_URL
+  : undefined;
+
+// Inline mode (renders in-place)
+<NsReactChatbot id="chat" variant="inline" />
+
+// Panel mode (fixed bottom panel, collapsible)
+<NsReactChatbot
+  id="assistant"
+  variant="panel"
+  title="AI Assistant"
+  structuredOutput={{ name: 'response', schema: myZodSchema }}
+  onStructuredResponse={(data) => handleAiResponse(data)}
+  apiBaseUrl={proxyBaseUrl}
+/>
+```

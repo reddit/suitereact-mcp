@@ -1,0 +1,19 @@
+<customlist scriptid="customlist_sr_doc_status">
+  <name>SR | Doc Status</name>
+  <description>Lifecycle status of a doc-spaces document.</description>
+  <isinactive>F</isinactive>
+  <isordered>T</isordered>
+  <ismatrixoption>F</ismatrixoption>
+  <customvalues>
+    <customvalue scriptid="val_draft">
+      <value>draft</value>
+      <abbreviation></abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_published">
+      <value>published</value>
+      <abbreviation></abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+  </customvalues>
+</customlist>

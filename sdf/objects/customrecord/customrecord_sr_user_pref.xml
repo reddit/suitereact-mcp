@@ -1,0 +1,57 @@
+<customrecordtype scriptid="customrecord_sr_user_pref">
+  <accesstype>USEPERMISSIONLIST</accesstype>
+  <allowattachments>F</allowattachments>
+  <allowinlinedeleting>F</allowinlinedeleting>
+  <allowinlinedetaching>F</allowinlinedetaching>
+  <allowinlineediting>F</allowinlineediting>
+  <allowmobileaccess>F</allowmobileaccess>
+  <allownumberingoverride>F</allownumberingoverride>
+  <allowquickadd>F</allowquickadd>
+  <allowquicksearch>F</allowquicksearch>
+  <allowuiaccess>F</allowuiaccess>
+  <description>Per-employee preferences for doc-spaces (default landing space).</description>
+  <enabledle>F</enabledle>
+  <enablekeywords>F</enablekeywords>
+  <enablemailmerge>F</enablemailmerge>
+  <enablenametranslation>F</enablenametranslation>
+  <enablenumbering>F</enablenumbering>
+  <enableoptimisticlocking>T</enableoptimisticlocking>
+  <enablesystemnotes>T</enablesystemnotes>
+  <hierarchical>F</hierarchical>
+  <iconbuiltin>T</iconbuiltin>
+  <includename>F</includename>
+  <isinactive>F</isinactive>
+  <isordered>F</isordered>
+  <recordname>SR | User Preferences</recordname>
+  <numberingmindigits>1</numberingmindigits>
+  <numberinginit>1</numberinginit>
+  <showcreationdate>T</showcreationdate>
+  <showcreationdateonlist>T</showcreationdateonlist>
+  <showid>F</showid>
+  <showlastmodified>T</showlastmodified>
+  <showlastmodifiedonlist>T</showlastmodifiedonlist>
+  <shownotes>F</shownotes>
+  <showowner>T</showowner>
+  <showownerallowchange>F</showownerallowchange>
+  <showowneronlist>T</showowneronlist>
+  <customrecordcustomfields>
+    <customrecordcustomfield scriptid="custrecord_userpref_employee">
+      <fieldtype>SELECT</fieldtype>
+      <label>Employee</label>
+      <selectrecordtype>-4</selectrecordtype>
+      <ismandatory>T</ismandatory>
+      <accesslevel>2</accesslevel>
+      <searchlevel>2</searchlevel>
+      <storevalue>T</storevalue>
+    </customrecordcustomfield>
+    <customrecordcustomfield scriptid="custrecord_userpref_default_space">
+      <fieldtype>SELECT</fieldtype>
+      <label>Default landing space</label>
+      <selectrecordtype>[scriptid=customrecord_sr_space]</selectrecordtype>
+      <ismandatory>F</ismandatory>
+      <accesslevel>2</accesslevel>
+      <searchlevel>2</searchlevel>
+      <storevalue>T</storevalue>
+    </customrecordcustomfield>
+  </customrecordcustomfields>
+</customrecordtype>

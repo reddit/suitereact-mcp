@@ -1,0 +1,40 @@
+{
+  "name": "rdt-sr-approval-manager",
+  "private": true,
+  "version": "0.1.0",
+  "license": "BSD-3-Clause",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "typecheck": "tsc --noEmit",
+    "preview": "vite preview",
+    "lint": "cd ../.. && eslint 'apps/approval-manager/src/**/*.{ts,tsx}' --max-warnings 0",
+    "lint:fix": "cd ../.. && eslint 'apps/approval-manager/src/**/*.{ts,tsx}' --fix"
+  },
+  "devDependencies": {
+    "@hitc/netsuite-types": "^2024.2.2",
+    "@types/node": "^20.11.25",
+    "@types/react": "^18.2.64",
+    "@types/react-dom": "^18.2.21",
+    "@vitejs/plugin-react": "^4.2.1",
+    "typescript": "^5.4.2",
+    "vite": "^6.3.5",
+    "vite-tsconfig-paths": "^4.3.1"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^7.1.0",
+    "@mui/material": "^7.1.0",
+    "@mui/x-data-grid": "^8.6.0",
+    "axios": "^1.15.0",
+    "dayjs": "^1.11.10",
+    "suitereact": "file:../../suitereact",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}

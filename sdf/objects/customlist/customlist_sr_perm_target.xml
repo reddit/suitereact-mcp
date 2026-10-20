@@ -1,0 +1,19 @@
+<customlist scriptid="customlist_sr_perm_target">
+  <name>SR | Permission Target Type</name>
+  <description>Whether a permission applies to a space or a single doc.</description>
+  <isinactive>F</isinactive>
+  <isordered>F</isordered>
+  <ismatrixoption>F</ismatrixoption>
+  <customvalues>
+    <customvalue scriptid="val_space">
+      <value>space</value>
+      <abbreviation></abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_doc">
+      <value>doc</value>
+      <abbreviation></abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+  </customvalues>
+</customlist>

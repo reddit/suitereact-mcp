@@ -1,0 +1,78 @@
+<restlet scriptid="customscript_sr_rl_llm_proxy">
+  <description>REST endpoint to route requests to LLM APIs.</description>
+  <isinactive>F</isinactive>
+  <name>SuiteReact | RL | LLM Proxy</name>
+  <notifyadmins>F</notifyadmins>
+  <notifyemails></notifyemails>
+  <notifyowner>T</notifyowner>
+  <notifyuser>F</notifyuser>
+  <scriptfile>[/SuiteScripts/sdf/scripts/sr_rl_llm_proxy.js]</scriptfile>
+  <scriptcustomfields>
+    <scriptcustomfield scriptid="custscript_sr_llm_role_ids">
+      <accesslevel>2</accesslevel>
+      <applyformatting>F</applyformatting>
+      <checkspelling>F</checkspelling>
+      <defaultchecked>F</defaultchecked>
+      <defaultselection></defaultselection>
+      <defaultvalue></defaultvalue>
+      <description>Comma-separated internal IDs of roles allowed to use the LLM proxy. Empty denies all access.</description>
+      <displayheight></displayheight>
+      <displaytype>NORMAL</displaytype>
+      <displaywidth></displaywidth>
+      <dynamicdefault></dynamicdefault>
+      <fieldtype>TEXT</fieldtype>
+      <help>Configure explicit least-privilege role IDs before deployment.</help>
+      <isformula>F</isformula>
+      <ismandatory>F</ismandatory>
+      <label>Allowed Role IDs</label>
+      <linktext></linktext>
+      <maxlength></maxlength>
+      <maxvalue></maxvalue>
+      <minvalue></minvalue>
+      <onparentdelete>NO_ACTION</onparentdelete>
+      <searchlevel>2</searchlevel>
+      <selectrecordtype></selectrecordtype>
+      <setting></setting>
+      <storevalue>T</storevalue>
+    </scriptcustomfield>
+    <scriptcustomfield scriptid="custscript_sr_llm_models">
+      <accesslevel>2</accesslevel>
+      <applyformatting>F</applyformatting>
+      <checkspelling>F</checkspelling>
+      <defaultchecked>F</defaultchecked>
+      <defaultselection></defaultselection>
+      <defaultvalue></defaultvalue>
+      <description>Comma-separated provider:model pairs allowed by this deployment, for example openai:gpt-5.4 or openrouter:google/gemini-2.5-pro. Empty denies all routes.</description>
+      <displayheight></displayheight>
+      <displaytype>NORMAL</displaytype>
+      <displaywidth></displaywidth>
+      <dynamicdefault></dynamicdefault>
+      <fieldtype>TEXTAREA</fieldtype>
+      <help>Authorize each provider and model together to control cost and data routing.</help>
+      <isformula>F</isformula>
+      <ismandatory>F</ismandatory>
+      <label>Allowed Provider/Model Pairs</label>
+      <linktext></linktext>
+      <maxlength></maxlength>
+      <maxvalue></maxvalue>
+      <minvalue></minvalue>
+      <onparentdelete>NO_ACTION</onparentdelete>
+      <searchlevel>2</searchlevel>
+      <selectrecordtype></selectrecordtype>
+      <setting></setting>
+      <storevalue>T</storevalue>
+    </scriptcustomfield>
+  </scriptcustomfields>
+  <scriptdeployments>
+    <scriptdeployment scriptid="customdeploy_sr_rl_llm_proxy">
+      <allemployees>F</allemployees>
+      <allpartners>F</allpartners>
+      <allroles>F</allroles>
+      <audslctrole></audslctrole>
+      <isdeployed>F</isdeployed>
+      <loglevel>ERROR</loglevel>
+      <status>TESTING</status>
+      <title>SuiteReact | RL | LLM Proxy</title>
+    </scriptdeployment>
+  </scriptdeployments>
+</restlet>

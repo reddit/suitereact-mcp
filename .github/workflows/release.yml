@@ -1,0 +1,60 @@
+name: Release packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish validated packages to npm
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: release-packages
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    environment: npm-publish
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: npm
+          registry-url: https://registry.npmjs.org
+      - name: Verify protected signed release tag
+        if: ${{ inputs.publish }}
+        run: node deploy/verify-release-tag.mjs
+        env:
+          RELEASE_ALLOWED_SIGNERS: ${{ vars.RELEASE_ALLOWED_SIGNERS }}
+      - run: npm ci
+      - run: npm run check
+      - run: npm run audit:dependencies
+      - run: npm run check:packages
+      - name: Preview SuiteReact package
+        if: ${{ !inputs.publish }}
+        run: npm publish --dry-run --workspace=suitereact
+      - name: Preview MCP package
+        if: ${{ !inputs.publish }}
+        run: npm publish --dry-run --workspace=mcp-server-netsuite
+      - name: Publish SuiteReact package
+        if: ${{ inputs.publish }}
+        run: npm publish --workspace=suitereact --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish MCP package
+        if: ${{ inputs.publish }}
+        run: npm publish --workspace=mcp-server-netsuite --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

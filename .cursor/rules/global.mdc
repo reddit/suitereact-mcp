@@ -1,0 +1,88 @@
+---
+description: 'SuiteReact MCP project structure, commands, and conventions'
+alwaysApply: true
+---
+
+# SuiteReact MCP — Project Guide
+
+## Project Structure
+
+```
+suitereact-mcp/
+├── apps/               # SuiteReact applications (freeform React + MUI)
+├── suitereact/         # Slim utility library (REST, Toast, DataGrid, Chatbot)
+├── sdf/                # NetSuite SDF objects (Suitelets, RESTlets, scripts)
+├── server/             # Local dev proxy server (Express, port 3001)
+├── mcp/                # MCP server for AI-assisted development
+├── deploy/             # Build and deployment scripts
+└── dist/               # Compiled output for NetSuite deployment
+```
+
+## Key Commands
+
+- `npm run build:app <name>` — Build a specific app
+- `npm run build:all` — Build all apps + MCP + suitereact
+- `npm run build:mcp` — Build the MCP server
+- `npm run dev -- <name> [--live]` — Start a managed Vite and optional OAuth proxy session
+- `npm run dev:test -- <name> [--live] -- <command>` — Run a command in a managed session with guaranteed cleanup
+- `npm run dev:stop -- <name>` — Stop only processes owned by the managed session
+- `npm run server` — Build and start local proxy server (port 3001)
+- `npm run doctor` — Check local prerequisites and environment setup
+- `npm run review:app -- <name>` — Review app quality, legacy patterns, and performance red flags
+- `npm run test:app -- <name> --url <vite-url>` — Run UI smoke test
+- `npm run test:app -- <name> --url <vite-url> --live` — Run live proxy/RESTlet test
+- `npm run deploy:app -- <name>` — Validate and deploy app to NetSuite
+- `npm run validate:app -- <name>` — Validate app for deployment
+
+## Local Development (IMPORTANT)
+
+### Proxy server (required only for live NetSuite calls)
+
+The proxy server at `server/` is **required only for local calls to NetSuite**. UI-only tests do not start it. It:
+
+- Runs Express on **port 3001**
+- Uses OAuth TBA credentials from `server/.env` (consumer key/secret, token ID/secret, account ID)
+- Intercepts REST calls and attaches NetSuite OAuth headers
+- Routes `/api/handle-action` to the SuiteReact action handler RESTlet
+- Routes `/api/handle-llm-request` to the LLM proxy RESTlet
+
+**Start it:** `npm run server` (from repo root — installs deps, builds TS, starts Express)
+**Check if running:** `lsof -ti :3001`
+
+### App dev server
+
+- Each app runs Vite dev on port **5173** (or next available)
+- For local proxy calls, copy `example.env` to `.env.development.local`. Never put `VITE_PROXY_SERVER_BASE_URL` in `.env`, `.env.local`, or a production-mode env file because Vite can embed it in the deployed bundle
+- Start a managed session with `npm run dev -- <name>` from repo root
+
+### Testing sequence
+
+1. Run `npm run doctor` (use `-- --live` before live NetSuite calls)
+2. Start `npm run dev -- <name>`; add `--live` only when needed
+3. Run `npm run test:app -- <name> --url <reported-vite-url>` and add `--live` when applicable
+4. Run `npm run review:app -- <name>` before commit/deploy
+5. Stop with `npm run dev:stop -- <name>`
+
+## Playwright MCP (browser testing)
+
+- MCP server: "browser" in `.cursor/mcp.json`
+- Profile data: `.suitereact-testing/profile/`
+- Screenshots: `.suitereact-testing/screenshots/`
+- Test scripts: `.suitereact-testing/test-<app-name>.mjs`
+- `playwright` is installed as a root devDependency
+
+## Workflow State
+
+- Canonical state is `.workflows/<app-name>/<workflow-id>/workflow.json`
+- Workflow IDs are generated internally as `wf-<UTC timestamp>`
+- Workflow artifacts are ignored evidence; commits stage exact paths from `ownedFiles`
+
+## Architecture Notes
+
+- Apps use freeform React + MUI (NOT the old grid-schema approach)
+- `suitereact` library provides: REST, ToastProvider, NsReactChatbot, NsReactDataGrid
+- Forms, buttons, layouts use MUI components directly
+- Server communication: `handleRestletAction(action, data, apiBaseUrl)` from suitereact; use `REST.post` directly only in hosted-only client code
+- All apps deploy to NetSuite File Cabinet via SDF
+- Large data, PDF, zip, and bulk flows must follow `docs/performance.md`
+- App completion requires more than a passing build: use `docs/app-quality-checklist.md` and `npm run review:app -- <name>`

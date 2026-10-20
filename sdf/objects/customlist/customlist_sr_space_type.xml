@@ -1,0 +1,24 @@
+<customlist scriptid="customlist_sr_space_type">
+  <name>SR | Space Type</name>
+  <description>Type of doc-spaces space (adhoc, team, personal).</description>
+  <isinactive>F</isinactive>
+  <isordered>F</isordered>
+  <ismatrixoption>F</ismatrixoption>
+  <customvalues>
+    <customvalue scriptid="val_adhoc">
+      <value>adhoc</value>
+      <abbreviation></abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_team">
+      <value>team</value>
+      <abbreviation></abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_personal">
+      <value>personal</value>
+      <abbreviation></abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+  </customvalues>
+</customlist>

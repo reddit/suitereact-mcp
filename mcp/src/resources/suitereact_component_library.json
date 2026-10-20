@@ -1,0 +1,176 @@
+{
+  "metadata": {
+    "version": "2.0.0",
+    "framework": "SuiteReact",
+    "description": "Slim SuiteReact library plus MUI-first UI guidance for freeform NetSuite React applications (no declarative grid schema)"
+  },
+  "paradigm": {
+    "summary": "Build UIs with standard React and Material UI (@mui/material, @mui/icons-material, @mui/x-data-grid). Use the suitereact package for NetSuite I/O (REST), shared chrome (data grid, chatbot, HAL), and toasts—not for page layout schemas.",
+    "muiFirst": [
+      "Use MUI layout primitives: Box, Stack, Grid2, Paper, Container for structure.",
+      "Use MUI form controls: TextField, Select, Checkbox, Autocomplete, DatePicker (from @mui/x-date-pickers) for input.",
+      "Use MUI actions: Button, IconButton, Fab; navigation with Tabs, Breadcrumbs, Drawer as needed.",
+      "Compose pages as normal React trees; colocate state in components or custom hooks."
+    ],
+    "whenToUseSuitereact": [
+      "handleRestletAction for SuiteScript-backed actions in both local Vite and hosted NetSuite environments.",
+      "REST.post / REST.get only for lower-level hosted-Suitelet calls.",
+      "ToastProvider + useToastHelpers (or toastService where hooks are unavailable) for user feedback.",
+      "NsReactDataGrid when you need the SuiteReact data grid (saved search / SuiteQL sources, toolbar, filters).",
+      "NsReactChatbot for AI assistants; use variant='panel' and onStructuredResponse for structured JSON flows.",
+      "NsReactHal for the decorative HAL visualization (optional flourish)."
+    ]
+  },
+  "appStructure": {
+    "entry": "src/main.tsx — mounts React root, wraps ThemeProvider/CssBaseline/ToastProvider as needed.",
+    "shell": "src/App/App.tsx — top-level layout, routes or tabs, providers.",
+    "theme": "src/App/theme.ts — createTheme, palette, typography, component overrides.",
+    "domain": {
+      "views": "src/domain/views/ — page-level components (e.g. LandingPage.tsx).",
+      "actions": "src/domain/actions/ — client-side handlers, REST calls, chatbot callbacks.",
+      "types": "src/domain/types.ts — shared TypeScript types and Zod schemas for structured AI output."
+    },
+    "utils": "src/utils/ or project utils/ — helpers; suitereact exports REST from utils at package root.",
+    "server": "SuiteScript server actions live under sdf/actions/; export from sdf/actions/index.ts."
+  },
+  "library": {
+    "REST": {
+      "description": "Low-level Axios-based client for the SuiteReact action RESTlet. Prefer handleRestletAction when code must work in local Vite development and a hosted Suitelet.",
+      "import": "import { REST } from 'suitereact';",
+      "methods": {
+        "post": {
+          "signature": "REST.post({ action: string, data?: object })",
+          "returns": "Promise<{ data: T | null; error: unknown | null }> — the handler-owned transport envelope is unwrapped once, so data is the action DTO.",
+          "notes": "Use for hosted-only mutations and server procedures. `action` is the server function name."
+        },
+        "get": {
+          "signature": "REST.get({ action: string, data?: object })",
+          "returns": "Same shape as post; query string built from `data` when present.",
+          "notes": "Use for read-oriented server actions exposed via GET."
+        }
+      }
+    },
+    "handleRestletAction": {
+      "description": "Default environment-transparent helper that posts to an authenticated local dev proxy or uses REST.post in production.",
+      "import": "import { handleRestletAction } from 'suitereact';",
+      "signature": "handleRestletAction<T>(actionName: string, inputData: unknown, apiBaseUrl?: string, proxyToken?: string): Promise<T>",
+      "notes": [
+        "In local dev, pass import.meta.env.DEV-guarded VITE_PROXY_SERVER_BASE_URL and VITE_PROXY_SERVER_TOKEN values from .env.development.local.",
+        "In production (hosted Suitelet), omit apiBaseUrl so calls go directly via REST.post.",
+        "The promise resolves to the action DTO and rejects when the proxy or RESTlet reports an error."
+      ]
+    },
+    "columnTypeInference": {
+      "description": "Utilities to auto-detect DataGrid column types (date, number, string) from server row data. Use these whenever displaying dynamic/server-sourced data in MUI DataGrid.",
+      "import": "import { buildColumnTypeMap, applyColumnTypes, convertRowValues } from 'suitereact';",
+      "functions": {
+        "buildColumnTypeMap": {
+          "signature": "buildColumnTypeMap(fields: string[], rows: Record<string, unknown>[]): Record<string, InferredColType>",
+          "description": "Samples up to 30 rows per column and returns a type map. Detects M/D/YYYY, MM/DD/YYYY, YYYY-MM-DD as 'date'; finite numbers as 'number'; rest as 'string'."
+        },
+        "applyColumnTypes": {
+          "signature": "applyColumnTypes(columns: GridColDef[], typeMap: Record<string, InferredColType>): GridColDef[]",
+          "description": "Sets type and valueFormatter on each GridColDef based on the type map. Date columns get type:'date' + locale valueFormatter; number columns get type:'number'."
+        },
+        "convertRowValues": {
+          "signature": "convertRowValues(rows: Record<string, unknown>[], typeMap: Record<string, InferredColType>): Record<string, unknown>[]",
+          "description": "Converts date strings to Date objects and numeric strings to numbers so DataGrid filters and sorting work natively."
+        },
+        "inferColumnType": {
+          "signature": "inferColumnType(fieldId: string, rows: Record<string, unknown>[], sampleSize?: number): InferredColType",
+          "description": "Lower-level: infers the type for a single column. Usually you'd use buildColumnTypeMap instead."
+        }
+      },
+      "usage": "const typeMap = buildColumnTypeMap(columns.map(c => c.field), rows);\nconst typedCols = applyColumnTypes(columns, typeMap);\nconst typedRows = convertRowValues(rows, typeMap);",
+      "notes": [
+        "ALWAYS use these when building DataGrid from dynamic NetSuite data (SuiteQL results, saved search rows).",
+        "Without these, date columns sort alphabetically and number columns sort as strings.",
+        "For static/known schemas, you can skip inference and set type directly on GridColDef."
+      ]
+    },
+    "toasts": {
+      "ToastProvider": {
+        "description": "Context provider for toast queue; wrap your app (often in main.tsx or App.tsx).",
+        "import": "import { ToastProvider } from 'suitereact';"
+      },
+      "useToastHelpers": {
+        "description": "Hook returning showSuccess, showError, showWarning, showInfo(message, durationMs?).",
+        "import": "import { useToastHelpers } from 'suitereact';",
+        "requires": "Must be used under ToastProvider."
+      },
+      "toastService": {
+        "description": "Imperative toast API for non-component code (use sparingly; prefer useToastHelpers in components).",
+        "import": "import { toastService } from 'suitereact';"
+      }
+    },
+    "NsReactChatbot": {
+      "description": "AI chat UI with multi-model support; requests go through NetSuite’s secure proxy.",
+      "import": "import { NsReactChatbot } from 'suitereact';",
+      "keyProps": {
+        "id": "Stable React key / instance id (required).",
+        "title": "Chat header title.",
+        "placeholder": "Input placeholder.",
+        "height": "CSS height for inline variant.",
+        "clientConfig": "systemContext, defaultTemperature, defaultMaxTokens, etc.",
+        "availableModels": "NsReactChatModelDefinition[] — or rely on DEFAULT_CHAT_MODELS from suitereact.",
+        "defaultModelId": "Initial model id.",
+        "structuredOutput": "{ name, schema } — Zod schema or JSON schema for enforced JSON responses.",
+        "variant": "'inline' | 'panel' — panel is a fixed bottom-of-viewport collapsible drawer-style chat.",
+        "panelWidth": "When variant='panel', width of the panel (default ~400px; use '100%' for full width).",
+        "defaultExpanded": "Whether the panel starts expanded.",
+        "onStructuredResponse": "Callback (data) => void when structured JSON is returned — preferred over legacy onResponse/handleAction chaining.",
+        "apiBaseUrl": "Pass an import.meta.env.DEV-guarded VITE_PROXY_SERVER_BASE_URL during local development; omit it in a hosted Suitelet.",
+        "apiToken": "Pass the matching VITE_PROXY_SERVER_TOKEN during local development; omit it in a hosted Suitelet."
+      },
+      "deprecated": "onResponse + handleAction — use onStructuredResponse for new apps."
+    },
+    "NsReactDataGrid": {
+      "description": "SuiteReact data grid wrapping MUI X patterns with NetSuite data sources (saved search, SuiteQL, etc.), toolbar, pagination, and filter operators (NsReactDataGridFilterOperator).",
+      "import": "import { NsReactDataGrid, NsReactDataGridToolbar, NsReactDataGridPagination, NsReactDataGridFilterOperator } from 'suitereact';",
+      "notes": [
+        "Use when integrating with SuiteReact table sources and toolbars.",
+        "When apiBaseUrl points at the local proxy, pass the matching development-only apiToken so requests include X-SuiteReact-Proxy-Token.",
+        "For fully custom grids, you may also use @mui/x-data-grid DataGrid directly with your own row data."
+      ]
+    },
+    "NsReactHal": {
+      "description": "Decorative HAL 9000–style visualization; no business logic.",
+      "import": "import { NsReactHal } from 'suitereact';"
+    }
+  },
+  "muiDataGrid": {
+    "description": "For freeform apps, import DataGrid from @mui/x-data-grid. Define GridColDef columns, rows, sortModel, filterModel, and slots/toolbar as needed. IMPORTANT: When columns come from dynamic server data (SuiteQL, saved searches), always use buildColumnTypeMap + applyColumnTypes + convertRowValues from suitereact to set proper column types. This ensures date columns use date-picker filters and chronological sorting, and number columns sort numerically with locale formatting. NsReactDataGrid is the opinionated SuiteReact wrapper when you need NetSuite wiring out of the box."
+  },
+  "styling": {
+    "brandColors": {
+      "primary": "#02315c",
+      "secondary": "#616f74",
+      "accent": "#00a3e0",
+      "success": "#81C784",
+      "warning": "#ff9800",
+      "danger": "#E57373",
+      "light": "#f5f5f5",
+      "dark": "#333333"
+    },
+    "guidance": [
+      "Centralize palette and typography in theme.ts with createTheme.",
+      "Prefer theme.palette and spacing() over hard-coded pixels.",
+      "Use sx prop or styled() for one-off component styling."
+    ]
+  },
+  "bestPractices": {
+    "architecture": [
+      "Keep view components mostly presentational; move NetSuite calls to action modules or hooks.",
+      "Type server request/response bodies in domain/types.ts.",
+      "Use Zod for structured chatbot outputs and parse before using in UI."
+    ],
+    "netsuite": [
+      "Test SuiteQL in development with the MCP SuiteQL tools before embedding in server actions.",
+      "Never expose API secrets in client code; chat and REST credentials stay server-side."
+    ],
+    "lint": [
+      "Avoid console.log in shipping code; use server log.* in SuiteScript.",
+      "Run the app’s npm run lint / lint:fix from the app directory."
+    ]
+  }
+}

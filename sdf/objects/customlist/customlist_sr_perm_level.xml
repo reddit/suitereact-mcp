@@ -1,0 +1,34 @@
+<customlist scriptid="customlist_sr_perm_level">
+  <name>SR | Permission Level</name>
+  <description>Permission strength: view &lt; comment &lt; review &lt; edit &lt; admin.</description>
+  <isinactive>F</isinactive>
+  <isordered>T</isordered>
+  <ismatrixoption>F</ismatrixoption>
+  <customvalues>
+    <customvalue scriptid="val_view">
+      <value>view</value>
+      <abbreviation></abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_comment">
+      <value>comment</value>
+      <abbreviation></abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_review">
+      <value>review</value>
+      <abbreviation></abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_edit">
+      <value>edit</value>
+      <abbreviation></abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_admin">
+      <value>admin</value>
+      <abbreviation></abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+  </customvalues>
+</customlist>

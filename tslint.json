@@ -1,0 +1,40 @@
+{
+  "defaultSeverity": "error",
+  "extends": ["tslint:recommended", "tslint-config-prettier"],
+  "jsRules": {},
+  "linterOptions": {
+    "exclude": ["node_modules/**/*", ".*/**/*"]
+  },
+  "rules": {
+    "array-type": [true, "array-simple"],
+    "arrow-parens": [true, "ban-single-arg-parens"],
+    "indent": [true, "spaces", 2],
+    "interface-over-type-literal": [true],
+    "interface-name": [true, "never-prefix"],
+    "member-access": [true, "no-public"],
+    "no-empty": [true, "allow-empty-functions"],
+    "object-literal-sort-keys": [false],
+    "no-default-export": true,
+    "quotemark": [
+      true,
+      "single",
+      "jsx-double",
+      "avoid-escape",
+      "avoid-template"
+    ],
+    "semicolon": [true, "always", "ignore-bound-class-methods"],
+    "trailing-comma": [
+      true,
+      {
+        "multiline": {
+          "objects": "always",
+          "arrays": "always",
+          "functions": "never",
+          "typeLiterals": "ignore"
+        },
+        "esSpecCompliant": true
+      }
+    ]
+  },
+  "rulesDirectory": []
+}

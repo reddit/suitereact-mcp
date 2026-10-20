@@ -1,0 +1,54 @@
+<suitelet scriptid="customscript_sr_sui_suiteql_bot">
+  <description>Write, run, and explore SuiteQL queries with AI assistance</description>
+  <isinactive>F</isinactive>
+  <name>SR | SUI | SuiteQL Bot</name>
+  <notifyadmins>F</notifyadmins>
+  <notifyemails></notifyemails>
+  <notifyowner>T</notifyowner>
+  <notifyuser>F</notifyuser>
+  <scriptfile>[/SuiteScripts/apps/suiteql-bot/suitelet/sr_sui_suiteql_bot.js]</scriptfile>
+    <scriptcustomfields>
+    <scriptcustomfield scriptid="custscript_sr_suiteql_bot_ns_window">
+      <accesslevel>2</accesslevel>
+      <applyformatting>F</applyformatting>
+      <checkspelling>F</checkspelling>
+      <defaultchecked>F</defaultchecked>
+      <defaultselection></defaultselection>
+      <defaultvalue></defaultvalue>
+      <description>Checking this box will cause the React App to be rendered within the NetSuite UI.</description>
+      <displayheight></displayheight>
+      <displaytype>NORMAL</displaytype>
+      <displaywidth></displaywidth>
+      <dynamicdefault></dynamicdefault>
+      <fieldtype>CHECKBOX</fieldtype>
+      <help></help>
+      <isformula>F</isformula>
+      <ismandatory>F</ismandatory>
+      <label>Render NetSuite UI</label>
+      <linktext></linktext>
+      <maxlength></maxlength>
+      <maxvalue></maxvalue>
+      <minvalue></minvalue>
+      <onparentdelete></onparentdelete>
+      <searchlevel>2</searchlevel>
+      <selectrecordtype></selectrecordtype>
+      <setting></setting>
+      <storevalue>T</storevalue>
+    </scriptcustomfield>
+  </scriptcustomfields>
+  <scriptdeployments>
+    <scriptdeployment scriptid="customdeploy_sr_sui_suiteql_bot">
+      <allemployees>F</allemployees>
+      <allpartners>F</allpartners>
+      <allroles>F</allroles>
+      <custscript_sr_suiteql_bot_ns_window>T</custscript_sr_suiteql_bot_ns_window>
+      <audslctrole></audslctrole>
+      <eventtype></eventtype>
+      <isdeployed>F</isdeployed>
+      <isonline>F</isonline>
+      <loglevel>ERROR</loglevel>
+      <status>TESTING</status>
+      <title>SR | SUI | SuiteQL Bot</title>
+    </scriptdeployment>
+  </scriptdeployments>
+</suitelet>

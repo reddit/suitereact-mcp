@@ -1,0 +1,105 @@
+<customrecordtype scriptid="customrecord_sr_space">
+  <accesstype>USEPERMISSIONLIST</accesstype>
+  <allowattachments>F</allowattachments>
+  <allowinlinedeleting>F</allowinlinedeleting>
+  <allowinlinedetaching>F</allowinlinedetaching>
+  <allowinlineediting>F</allowinlineediting>
+  <allowmobileaccess>F</allowmobileaccess>
+  <allownumberingoverride>F</allownumberingoverride>
+  <allowquickadd>F</allowquickadd>
+  <allowquicksearch>F</allowquicksearch>
+  <allowuiaccess>F</allowuiaccess>
+  <description>doc-spaces space — slug, name, type, owner, landing doc.</description>
+  <enabledle>F</enabledle>
+  <enablekeywords>F</enablekeywords>
+  <enablemailmerge>F</enablemailmerge>
+  <enablenametranslation>F</enablenametranslation>
+  <enablenumbering>F</enablenumbering>
+  <enableoptimisticlocking>T</enableoptimisticlocking>
+  <enablesystemnotes>T</enablesystemnotes>
+  <hierarchical>F</hierarchical>
+  <iconbuiltin>T</iconbuiltin>
+  <includename>T</includename>
+  <isinactive>F</isinactive>
+  <isordered>F</isordered>
+  <recordname>SR | Space</recordname>
+  <numberingprefix></numberingprefix>
+  <numberingsuffix></numberingsuffix>
+  <numberingmindigits>1</numberingmindigits>
+  <numberinginit>1</numberinginit>
+  <showcreationdate>T</showcreationdate>
+  <showcreationdateonlist>T</showcreationdateonlist>
+  <showid>F</showid>
+  <showlastmodified>T</showlastmodified>
+  <showlastmodifiedonlist>T</showlastmodifiedonlist>
+  <shownotes>F</shownotes>
+  <showowner>T</showowner>
+  <showownerallowchange>F</showownerallowchange>
+  <showowneronlist>T</showowneronlist>
+  <customrecordcustomfields>
+    <customrecordcustomfield scriptid="custrecord_space_slug">
+      <fieldtype>TEXT</fieldtype>
+      <label>Slug</label>
+      <ismandatory>T</ismandatory>
+      <checkspelling>F</checkspelling>
+      <defaultchecked>F</defaultchecked>
+      <isformula>F</isformula>
+      <accesslevel>2</accesslevel>
+      <searchlevel>2</searchlevel>
+      <storevalue>T</storevalue>
+      <description>URL-safe identifier; used in File Cabinet path.</description>
+    </customrecordcustomfield>
+    <customrecordcustomfield scriptid="custrecord_space_type">
+      <fieldtype>SELECT</fieldtype>
+      <label>Type</label>
+      <selectrecordtype>[scriptid=customlist_sr_space_type]</selectrecordtype>
+      <ismandatory>T</ismandatory>
+      <accesslevel>2</accesslevel>
+      <searchlevel>2</searchlevel>
+      <storevalue>T</storevalue>
+    </customrecordcustomfield>
+    <customrecordcustomfield scriptid="custrecord_space_description">
+      <fieldtype>TEXTAREA</fieldtype>
+      <label>Description</label>
+      <ismandatory>F</ismandatory>
+      <accesslevel>2</accesslevel>
+      <searchlevel>2</searchlevel>
+      <storevalue>T</storevalue>
+    </customrecordcustomfield>
+    <customrecordcustomfield scriptid="custrecord_space_owner">
+      <fieldtype>SELECT</fieldtype>
+      <label>Owner</label>
+      <selectrecordtype>-4</selectrecordtype>
+      <ismandatory>F</ismandatory>
+      <accesslevel>2</accesslevel>
+      <searchlevel>2</searchlevel>
+      <storevalue>T</storevalue>
+      <description>Employee that owns this space.</description>
+    </customrecordcustomfield>
+    <customrecordcustomfield scriptid="custrecord_space_landing_doc">
+      <fieldtype>SELECT</fieldtype>
+      <label>Landing doc</label>
+      <selectrecordtype>[scriptid=customrecord_sr_doc]</selectrecordtype>
+      <ismandatory>F</ismandatory>
+      <accesslevel>2</accesslevel>
+      <searchlevel>2</searchlevel>
+      <storevalue>T</storevalue>
+    </customrecordcustomfield>
+    <customrecordcustomfield scriptid="custrecord_space_fc_folder">
+      <fieldtype>INTEGER</fieldtype>
+      <label>File Cabinet folder ID</label>
+      <ismandatory>F</ismandatory>
+      <accesslevel>2</accesslevel>
+      <searchlevel>2</searchlevel>
+      <storevalue>T</storevalue>
+    </customrecordcustomfield>
+    <customrecordcustomfield scriptid="custrecord_space_archived">
+      <fieldtype>CHECKBOX</fieldtype>
+      <label>Archived</label>
+      <defaultchecked>F</defaultchecked>
+      <accesslevel>2</accesslevel>
+      <searchlevel>2</searchlevel>
+      <storevalue>T</storevalue>
+    </customrecordcustomfield>
+  </customrecordcustomfields>
+</customrecordtype>

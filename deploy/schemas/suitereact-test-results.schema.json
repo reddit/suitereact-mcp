@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SuiteReact browser test results",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "appName",
+    "capturedAt",
+    "passed",
+    "mode",
+    "viteUrl",
+    "proxyRunning",
+    "dataLoaded",
+    "consoleErrors",
+    "consoleWarnings",
+    "pageErrors",
+    "actionResponses",
+    "screenshots",
+    "snapshots",
+    "metrics",
+    "errors"
+  ],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "appName": { "type": "string", "minLength": 1 },
+    "workflowId": { "type": ["string", "null"] },
+    "capturedAt": { "type": "string", "format": "date-time" },
+    "passed": { "type": "boolean" },
+    "mode": { "enum": ["ui-smoke", "live-netsuite"] },
+    "viteUrl": { "type": "string" },
+    "proxyUrl": { "type": ["string", "null"] },
+    "proxyRunning": { "type": "boolean" },
+    "spec": { "type": ["string", "null"] },
+    "dataLoaded": { "type": "boolean" },
+    "consoleErrors": { "type": "array", "items": { "type": "string" } },
+    "consoleWarnings": { "type": "array", "items": { "type": "string" } },
+    "pageErrors": { "type": "array", "items": { "type": "string" } },
+    "actionResponses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "status", "ok", "capturedAt"],
+        "properties": {
+          "url": { "type": "string" },
+          "status": { "type": "integer" },
+          "ok": { "type": "boolean" },
+          "capturedAt": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "screenshots": { "type": "array", "items": { "type": "string" } },
+    "snapshots": { "type": "array", "items": { "type": "object" } },
+    "metrics": { "type": "object" },
+    "errors": { "type": "array", "items": { "type": "string" } },
+    "notes": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}

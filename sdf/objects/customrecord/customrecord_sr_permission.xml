@@ -1,0 +1,93 @@
+<customrecordtype scriptid="customrecord_sr_permission">
+  <accesstype>USEPERMISSIONLIST</accesstype>
+  <allowattachments>F</allowattachments>
+  <allowinlinedeleting>F</allowinlinedeleting>
+  <allowinlinedetaching>F</allowinlinedetaching>
+  <allowinlineediting>F</allowinlineediting>
+  <allowmobileaccess>F</allowmobileaccess>
+  <allownumberingoverride>F</allownumberingoverride>
+  <allowquickadd>F</allowquickadd>
+  <allowquicksearch>F</allowquicksearch>
+  <allowuiaccess>F</allowuiaccess>
+  <description>doc-spaces ACL grant: target + principal + level.</description>
+  <enabledle>F</enabledle>
+  <enablekeywords>F</enablekeywords>
+  <enablemailmerge>F</enablemailmerge>
+  <enablenametranslation>F</enablenametranslation>
+  <enablenumbering>F</enablenumbering>
+  <enableoptimisticlocking>T</enableoptimisticlocking>
+  <enablesystemnotes>T</enablesystemnotes>
+  <hierarchical>F</hierarchical>
+  <iconbuiltin>T</iconbuiltin>
+  <includename>T</includename>
+  <isinactive>F</isinactive>
+  <isordered>F</isordered>
+  <recordname>SR | Permission</recordname>
+  <numberingmindigits>1</numberingmindigits>
+  <numberinginit>1</numberinginit>
+  <showcreationdate>T</showcreationdate>
+  <showcreationdateonlist>T</showcreationdateonlist>
+  <showid>F</showid>
+  <showlastmodified>T</showlastmodified>
+  <showlastmodifiedonlist>T</showlastmodifiedonlist>
+  <shownotes>F</shownotes>
+  <showowner>T</showowner>
+  <showownerallowchange>F</showownerallowchange>
+  <showowneronlist>T</showowneronlist>
+  <customrecordcustomfields>
+    <customrecordcustomfield scriptid="custrecord_perm_target_type">
+      <fieldtype>SELECT</fieldtype>
+      <label>Target type</label>
+      <selectrecordtype>[scriptid=customlist_sr_perm_target]</selectrecordtype>
+      <ismandatory>T</ismandatory>
+      <accesslevel>2</accesslevel>
+      <searchlevel>2</searchlevel>
+      <storevalue>T</storevalue>
+    </customrecordcustomfield>
+    <customrecordcustomfield scriptid="custrecord_perm_target_id">
+      <fieldtype>TEXT</fieldtype>
+      <label>Target ID</label>
+      <ismandatory>T</ismandatory>
+      <accesslevel>2</accesslevel>
+      <searchlevel>2</searchlevel>
+      <storevalue>T</storevalue>
+      <description>Internal ID of the target space or doc record.</description>
+    </customrecordcustomfield>
+    <customrecordcustomfield scriptid="custrecord_perm_principal_type">
+      <fieldtype>SELECT</fieldtype>
+      <label>Principal type</label>
+      <selectrecordtype>[scriptid=customlist_sr_perm_principal]</selectrecordtype>
+      <ismandatory>T</ismandatory>
+      <accesslevel>2</accesslevel>
+      <searchlevel>2</searchlevel>
+      <storevalue>T</storevalue>
+    </customrecordcustomfield>
+    <customrecordcustomfield scriptid="custrecord_perm_principal_id">
+      <fieldtype>TEXT</fieldtype>
+      <label>Principal ID</label>
+      <ismandatory>F</ismandatory>
+      <accesslevel>2</accesslevel>
+      <searchlevel>2</searchlevel>
+      <storevalue>T</storevalue>
+      <description>Internal ID of employee or dyngroup; empty when principal is everyone.</description>
+    </customrecordcustomfield>
+    <customrecordcustomfield scriptid="custrecord_perm_level">
+      <fieldtype>SELECT</fieldtype>
+      <label>Level</label>
+      <selectrecordtype>[scriptid=customlist_sr_perm_level]</selectrecordtype>
+      <ismandatory>T</ismandatory>
+      <accesslevel>2</accesslevel>
+      <searchlevel>2</searchlevel>
+      <storevalue>T</storevalue>
+    </customrecordcustomfield>
+    <customrecordcustomfield scriptid="custrecord_perm_granted_by">
+      <fieldtype>SELECT</fieldtype>
+      <label>Granted by</label>
+      <selectrecordtype>-4</selectrecordtype>
+      <ismandatory>F</ismandatory>
+      <accesslevel>2</accesslevel>
+      <searchlevel>2</searchlevel>
+      <storevalue>T</storevalue>
+    </customrecordcustomfield>
+  </customrecordcustomfields>
+</customrecordtype>

@@ -1,0 +1,44 @@
+<usereventscript scriptid="customscript_sr_ue_doc_spaces_access">
+  <name>SR | UE | Doc Spaces Access</name>
+  <description>Enforces Doc Spaces write authorization on backing records, including direct record API writes.</description>
+  <isinactive>F</isinactive>
+  <notifyowner>T</notifyowner>
+  <scriptfile>[/SuiteScripts/sdf/scripts/sr_ue_doc_spaces_access.js]</scriptfile>
+  <scriptdeployments>
+    <scriptdeployment scriptid="customdeploy_sr_ue_ds_space">
+      <isdeployed>T</isdeployed>
+      <loglevel>ERROR</loglevel>
+      <recordtype>[scriptid=customrecord_sr_space]</recordtype>
+      <status>RELEASED</status>
+      <allroles>T</allroles>
+    </scriptdeployment>
+    <scriptdeployment scriptid="customdeploy_sr_ue_ds_doc">
+      <isdeployed>T</isdeployed>
+      <loglevel>ERROR</loglevel>
+      <recordtype>[scriptid=customrecord_sr_doc]</recordtype>
+      <status>RELEASED</status>
+      <allroles>T</allroles>
+    </scriptdeployment>
+    <scriptdeployment scriptid="customdeploy_sr_ue_ds_permission">
+      <isdeployed>T</isdeployed>
+      <loglevel>ERROR</loglevel>
+      <recordtype>[scriptid=customrecord_sr_permission]</recordtype>
+      <status>RELEASED</status>
+      <allroles>T</allroles>
+    </scriptdeployment>
+    <scriptdeployment scriptid="customdeploy_sr_ue_ds_dyngroup">
+      <isdeployed>T</isdeployed>
+      <loglevel>ERROR</loglevel>
+      <recordtype>[scriptid=customrecord_sr_dyngroup]</recordtype>
+      <status>RELEASED</status>
+      <allroles>T</allroles>
+    </scriptdeployment>
+    <scriptdeployment scriptid="customdeploy_sr_ue_ds_user_pref">
+      <isdeployed>T</isdeployed>
+      <loglevel>ERROR</loglevel>
+      <recordtype>[scriptid=customrecord_sr_user_pref]</recordtype>
+      <status>RELEASED</status>
+      <allroles>T</allroles>
+    </scriptdeployment>
+  </scriptdeployments>
+</usereventscript>

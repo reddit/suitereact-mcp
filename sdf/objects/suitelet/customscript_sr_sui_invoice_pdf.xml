@@ -1,0 +1,54 @@
+<suitelet scriptid="customscript_sr_sui_invoice_pdf">
+  <description>Search invoices and generate a ZIP of individual invoice PDFs</description>
+  <isinactive>F</isinactive>
+  <name>SR | SUI | Invoice PDF</name>
+  <notifyadmins>F</notifyadmins>
+  <notifyemails></notifyemails>
+  <notifyowner>T</notifyowner>
+  <notifyuser>F</notifyuser>
+  <scriptfile>[/SuiteScripts/apps/invoice-pdf/suitelet/sr_sui_invoice_pdf.js]</scriptfile>
+    <scriptcustomfields>
+    <scriptcustomfield scriptid="custscript_sr_invoice_pdf_ns_window">
+      <accesslevel>2</accesslevel>
+      <applyformatting>F</applyformatting>
+      <checkspelling>F</checkspelling>
+      <defaultchecked>F</defaultchecked>
+      <defaultselection></defaultselection>
+      <defaultvalue></defaultvalue>
+      <description>Checking this box will cause the React App to be rendered within the NetSuite UI.</description>
+      <displayheight></displayheight>
+      <displaytype>NORMAL</displaytype>
+      <displaywidth></displaywidth>
+      <dynamicdefault></dynamicdefault>
+      <fieldtype>CHECKBOX</fieldtype>
+      <help></help>
+      <isformula>F</isformula>
+      <ismandatory>F</ismandatory>
+      <label>Render NetSuite UI</label>
+      <linktext></linktext>
+      <maxlength></maxlength>
+      <maxvalue></maxvalue>
+      <minvalue></minvalue>
+      <onparentdelete></onparentdelete>
+      <searchlevel>2</searchlevel>
+      <selectrecordtype></selectrecordtype>
+      <setting></setting>
+      <storevalue>T</storevalue>
+    </scriptcustomfield>
+  </scriptcustomfields>
+  <scriptdeployments>
+    <scriptdeployment scriptid="customdeploy_sr_sui_invoice_pdf">
+      <allemployees>F</allemployees>
+      <allpartners>F</allpartners>
+      <allroles>F</allroles>
+      <custscript_sr_invoice_pdf_ns_window>T</custscript_sr_invoice_pdf_ns_window>
+      <audslctrole></audslctrole>
+      <eventtype></eventtype>
+      <isdeployed>F</isdeployed>
+      <isonline>F</isonline>
+      <loglevel>ERROR</loglevel>
+      <status>TESTING</status>
+      <title>SR | SUI | Invoice PDF</title>
+    </scriptdeployment>
+  </scriptdeployments>
+</suitelet>

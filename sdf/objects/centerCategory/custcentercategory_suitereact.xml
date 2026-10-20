@@ -1,0 +1,43 @@
+<centercategory scriptid="custcentercategory_suitereact">
+  <center>BASIC</center>
+  <centertab>BASICCENTERCUSTOMIZATION</centertab>
+  <label>SuiteReact</label>
+  <links>
+    <link>
+      <linklabel>Approval Manager</linklabel>
+      <linkobject>[scriptid=customscript_sr_sui_approval_manager.customdeploy_sr_sui_approval_manager]</linkobject>
+      <linktasktype>SCRIPT</linktasktype>
+      <shortlist>F</shortlist>
+    </link>
+    <link>
+      <linklabel>Data Viewer</linklabel>
+      <linkobject>[scriptid=customscript_sr_sui_data_viewer.customdeploy_sr_sui_data_viewer]</linkobject>
+      <linktasktype>SCRIPT</linktasktype>
+      <shortlist>F</shortlist>
+    </link>
+    <link>
+      <linklabel>Doc Spaces</linklabel>
+      <linkobject>[scriptid=customscript_sr_sui_doc_spaces.customdeploy_sr_sui_doc_spaces]</linkobject>
+      <linktasktype>SCRIPT</linktasktype>
+      <shortlist>F</shortlist>
+    </link>
+    <link>
+      <linklabel>Invoice PDF</linklabel>
+      <linkobject>[scriptid=customscript_sr_sui_invoice_pdf.customdeploy_sr_sui_invoice_pdf]</linkobject>
+      <linktasktype>SCRIPT</linktasktype>
+      <shortlist>F</shortlist>
+    </link>
+    <link>
+      <linklabel>Script Log Explorer</linklabel>
+      <linkobject>[scriptid=customscript_sr_sui_script_logs.customdeploy_sr_sui_script_logs]</linkobject>
+      <linktasktype>SCRIPT</linktasktype>
+      <shortlist>F</shortlist>
+    </link>
+    <link>
+      <linklabel>SuiteQL Bot</linklabel>
+      <linkobject>[scriptid=customscript_sr_sui_suiteql_bot.customdeploy_sr_sui_suiteql_bot]</linkobject>
+      <linktasktype>SCRIPT</linktasktype>
+      <shortlist>F</shortlist>
+    </link>
+  </links>
+</centercategory>

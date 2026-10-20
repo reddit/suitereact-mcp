@@ -1,0 +1,69 @@
+---
+description: 'NetSuite SDF, Suitelet, and RESTlet conventions'
+globs: 'sdf/**/*'
+---
+
+# NetSuite Integration Patterns
+
+## RESTlet Action Handler
+
+All server actions route through a single RESTlet: `customscript_sr_rl_rct_action_handler`
+
+- Actions are identified by the `action` parameter
+- Request: `{ action: string, ...data }`
+- Response: `{ success: boolean, data?: any, error?: string }`
+
+## Suitelet Pattern
+
+Each app has a Suitelet that serves the built React SPA:
+
+- Script loads `client/index.html` from the File Cabinet
+- Injects asset URLs for JS/CSS bundles
+- Can pass parameters via URL query string
+
+## Server Actions
+
+- Located in `sdf/actions/`
+- Each action is a function that receives the request context
+- Return a typed JSON-serializable DTO on success and throw an `Error` on failure
+- Let `sr_rl_rct_action_handler` own the outer `{ success, data, error }` transport envelope; do not call `successResponse()` or `errorResponse()` inside action modules
+- Available to apps via `handleRestletAction('actionName', payload, apiBaseUrl)`; use low-level `REST.post` only for hosted-only clients
+- Accept typed JSON payloads from the client; use legacy `elements[]` helpers only when maintaining old grid-schema apps
+- Return only data the UI needs; prefer File Cabinet file IDs/URLs over large inline file payloads
+
+## SuiteQL Execution
+
+- Action: `getTableRowsFromSuiteql`
+- Input: `{ query: string }`
+- Returns: `{ headers: [...], rows: [...] }`
+
+## SuiteQL Validation (MANDATORY)
+
+**All SuiteQL queries MUST be validated before finalizing or deploying code.**
+
+1. **Use the `suiteql_query_assistant` MCP tool first** — ask it about the correct table, field names, and JOIN structure for your query. SuiteQL fields differ from N/search fields (e.g. `mainline` is on `TransactionLine`, not `Transaction`).
+2. **Use the `execute_suiteql_query` MCP tool** to run the query against the live NetSuite instance and verify it returns expected results without errors.
+3. **Use the `get_netsuite_record_schema` MCP tool** when unsure about field names for a record type.
+
+### Common SuiteQL gotchas
+
+- `mainline` is a field on `TransactionLine`, NOT `Transaction` — use `INNER JOIN TransactionLine tl ON (tl.transaction = t.id) AND (tl.mainline = 'T')` to get header-level rows
+- Use `BUILTIN.DF()` to get display values for list/record fields (entity, status, type, etc.)
+- Use `REPLACE(BUILTIN.DF(t.status), '<Type> : ', '')` to strip the transaction type prefix from status values
+- Never use `LIMIT` in SuiteQL — use `RowNum` or the RESTlet's built-in pagination
+- The `transaction` table stores ALL transaction types; filter by `t.type = 'CustInvc'` for invoices, etc.
+
+## Deployment
+
+- SDF objects in `sdf/objects/` (Suitelets, RESTlets, saved searches)
+- Scripts in `sdf/scripts/`
+- Built app assets in `dist/FileCabinet/SuiteScripts/apps/<name>/client/`
+- Validate scoped app deploys with `npm run validate:app -- <app-name>` before `npm run deploy:app -- <app-name>`
+- Never use broad shared SuiteScript wildcards in app-scoped deploy overrides
+
+## Performance and Governance
+
+- Cap SuiteScript batch sizes for PDF rendering, record loads, and bulk updates
+- Check governance before long loops and return resumable partial results when needed
+- Use Map/Reduce or scheduled scripts for truly large jobs
+- Parameterize SuiteQL and use RowNum/keyset pagination instead of returning every row

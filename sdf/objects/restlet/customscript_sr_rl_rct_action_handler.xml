@@ -1,0 +1,107 @@
+<restlet scriptid="customscript_sr_rl_rct_action_handler">
+  <description></description>
+  <isinactive>F</isinactive>
+  <name>SuiteReact | RL | Action Handler</name>
+  <notifyadmins>F</notifyadmins>
+  <notifyemails></notifyemails>
+  <notifyowner>T</notifyowner>
+  <notifyuser>F</notifyuser>
+  <scriptfile>[/SuiteScripts/sdf/scripts/sr_rl_rct_action_handler.js]</scriptfile>
+  <scriptcustomfields>
+    <scriptcustomfield scriptid="custscript_sr_statement_email_role_ids">
+      <accesslevel>2</accesslevel>
+      <applyformatting>F</applyformatting>
+      <checkspelling>F</checkspelling>
+      <defaultchecked>F</defaultchecked>
+      <defaultselection></defaultselection>
+      <defaultvalue></defaultvalue>
+      <description>Comma-separated internal IDs of roles allowed to send customer statement emails. Emails are sent as the configured sender employee, which no native permission governs. Empty denies statement email.</description>
+      <displayheight></displayheight>
+      <displaytype>NORMAL</displaytype>
+      <displaywidth></displaywidth>
+      <dynamicdefault></dynamicdefault>
+      <fieldtype>TEXT</fieldtype>
+      <help>Grant only roles that may email customers on behalf of the statement sender.</help>
+      <isformula>F</isformula>
+      <ismandatory>F</ismandatory>
+      <label>Statement Email Role IDs</label>
+      <linktext></linktext>
+      <maxlength></maxlength>
+      <maxvalue></maxvalue>
+      <minvalue></minvalue>
+      <onparentdelete>NO_ACTION</onparentdelete>
+      <searchlevel>2</searchlevel>
+      <selectrecordtype></selectrecordtype>
+      <setting></setting>
+      <storevalue>T</storevalue>
+    </scriptcustomfield>
+    <scriptcustomfield scriptid="custscript_sr_email_template_id">
+      <accesslevel>2</accesslevel>
+      <applyformatting>F</applyformatting>
+      <checkspelling>F</checkspelling>
+      <defaultchecked>F</defaultchecked>
+      <defaultselection></defaultselection>
+      <defaultvalue></defaultvalue>
+      <description>Email template to be used when sending the customer statement.</description>
+      <displayheight></displayheight>
+      <displaytype>NORMAL</displaytype>
+      <displaywidth></displaywidth>
+      <dynamicdefault></dynamicdefault>
+      <fieldtype>SELECT</fieldtype>
+      <help>Email template to be used when sending the customer statement.</help>
+      <isformula>F</isformula>
+      <ismandatory>F</ismandatory>
+      <label>email-cust-stmnt | Email Template</label>
+      <linktext></linktext>
+      <maxlength></maxlength>
+      <maxvalue></maxvalue>
+      <minvalue></minvalue>
+      <onparentdelete>NO_ACTION</onparentdelete>
+      <searchlevel>2</searchlevel>
+      <selectrecordtype>-120</selectrecordtype>
+      <setting></setting>
+      <storevalue>T</storevalue>
+    </scriptcustomfield>
+    <scriptcustomfield scriptid="custscript_sr_email_sender_id">
+      <accesslevel>2</accesslevel>
+      <applyformatting>F</applyformatting>
+      <checkspelling>F</checkspelling>
+      <defaultchecked>F</defaultchecked>
+      <defaultselection></defaultselection>
+      <defaultvalue></defaultvalue>
+      <description>Employee record from which the customer statement should be sent. This will be the &quot;from&quot; email address in the customer statement email.</description>
+      <displayheight></displayheight>
+      <displaytype>NORMAL</displaytype>
+      <displaywidth></displaywidth>
+      <dynamicdefault></dynamicdefault>
+      <fieldtype>SELECT</fieldtype>
+      <help>Employee record from which the customer statement should be sent. This will be the &quot;from&quot; email address in the customer statement email.</help>
+      <isformula>F</isformula>
+      <ismandatory>F</ismandatory>
+      <label>email-cust-stmnt | Email Sender</label>
+      <linktext></linktext>
+      <maxlength></maxlength>
+      <maxvalue></maxvalue>
+      <minvalue></minvalue>
+      <onparentdelete>SET_NULL</onparentdelete>
+      <searchlevel>2</searchlevel>
+      <selectrecordtype>-4</selectrecordtype>
+      <setting></setting>
+      <storevalue>T</storevalue>
+    </scriptcustomfield>
+  </scriptcustomfields>
+  <scriptdeployments>
+    <scriptdeployment scriptid="customdeploy_sr_rl_rct_action_handler">
+      <allemployees>F</allemployees>
+      <allpartners>F</allpartners>
+      <allroles>F</allroles>
+      <audslctrole></audslctrole>
+      <custscript_sr_email_sender_id>[ACCOUNT_SPECIFIC_VALUE]</custscript_sr_email_sender_id>
+      <custscript_sr_email_template_id>[ACCOUNT_SPECIFIC_VALUE]</custscript_sr_email_template_id>
+      <isdeployed>F</isdeployed>
+      <loglevel>AUDIT</loglevel>
+      <status>TESTING</status>
+      <title>SuiteReact | RL | Action Handler</title>
+    </scriptdeployment>
+  </scriptdeployments>
+</restlet>

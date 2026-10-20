@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Test SuiteReact Action'
+  short_description: 'Call and refine RESTlet actions without the UI'
+  default_prompt: 'Use $suitereact-test-action to call a SuiteReact RESTlet action directly and diagnose its response.'

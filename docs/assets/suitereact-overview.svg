@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="580" viewBox="0 0 1080 580" role="img" aria-labelledby="title description">
+  <title id="title">The SuiteReact framework and full-cycle development process</title>
+  <desc id="description">SuiteReact provides a reusable framework for scalable React apps inside NetSuite, used by five reference applications. It combines shared React components, async REST action processing with bounded concurrency and progress tracking, and automated build and scoped deployment tooling. The suitereact-full-cycle skill coordinates planning, scaffolding or coding, building and reviewing, testing and iterating, documenting and committing, and optional validated deployment.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#101a2c"/>
+      <stop offset="1" stop-color="#182d40"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0 0 7 4 0 8" fill="none" stroke="#92abc2" stroke-width="1.5"/>
+    </marker>
+  </defs>
+  <rect width="1080" height="580" rx="20" fill="url(#background)"/>
+  <g font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif">
+    <text x="36" y="40" fill="#91d3ff" font-size="13" font-weight="700" letter-spacing="2">THE SUITEREACT FRAMEWORK</text>
+    <text x="36" y="83" fill="#f3f7fc" font-size="32" font-weight="700">Build scalable React apps inside NetSuite.</text>
+    <text x="36" y="113" fill="#c5d3e3" font-size="17">A shared foundation used by five reference apps, with build and deployment automation.</text>
+
+    <g transform="translate(36 140)">
+      <rect width="320" height="114" rx="12" fill="#1c2a40" stroke="#40516c"/>
+      <text x="18" y="33" fill="#91d3ff" font-size="20" font-weight="650">Reusable app foundation</text>
+      <text x="18" y="65" fill="#e0e9f2" font-size="16">React + TypeScript + Material UI</text>
+      <text x="18" y="90" fill="#c5d3e3" font-size="16">Shared components and transport</text>
+    </g>
+    <g transform="translate(380 140)">
+      <rect width="320" height="114" rx="12" fill="#1c2a40" stroke="#40516c"/>
+      <text x="18" y="33" fill="#8ce0c3" font-size="20" font-weight="650">Patterns for scale</text>
+      <text x="18" y="65" fill="#e0e9f2" font-size="16">Async REST action processing</text>
+      <text x="18" y="90" fill="#c5d3e3" font-size="16">Bounded concurrency + progress</text>
+    </g>
+    <g transform="translate(724 140)">
+      <rect width="320" height="114" rx="12" fill="#1c2a40" stroke="#40516c"/>
+      <text x="18" y="33" fill="#d7bbff" font-size="20" font-weight="650">Automated build + deploy</text>
+      <text x="18" y="65" fill="#e0e9f2" font-size="16">App bundles + SDF validation</text>
+      <text x="18" y="90" fill="#c5d3e3" font-size="16">Scoped deployment when requested</text>
+    </g>
+
+    <path d="M36 284 H1044" stroke="#40516c"/>
+    <text x="36" y="318" fill="#8ce0c3" font-size="13" font-weight="700" letter-spacing="2">THE DEVELOPMENT PROCESS</text>
+    <text x="36" y="357" fill="#f3f7fc" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="29" font-weight="700">suitereact-full-cycle</text>
+    <text x="36" y="386" fill="#c5d3e3" font-size="17">One goal. A coordinated workflow from implementation to verified delivery.</text>
+
+    <g transform="translate(36 411)">
+      <rect width="148" height="90" rx="10" fill="#21364a" stroke="#4b708d"/>
+      <text x="14" y="31" fill="#f3f7fc" font-size="18" font-weight="650">Plan</text>
+      <text x="14" y="61" fill="#c5d3e3" font-size="14">Goal + scope</text>
+    </g>
+    <g transform="translate(208 411)">
+      <rect width="148" height="90" rx="10" fill="#21364a" stroke="#4b708d"/>
+      <text x="14" y="31" fill="#f3f7fc" font-size="18" font-weight="650">Implement</text>
+      <text x="14" y="61" fill="#c5d3e3" font-size="14">Scaffold or code</text>
+    </g>
+    <g transform="translate(380 411)">
+      <rect width="148" height="90" rx="10" fill="#21364a" stroke="#4b708d"/>
+      <text x="14" y="31" fill="#f3f7fc" font-size="18" font-weight="650">Build + review</text>
+      <text x="14" y="61" fill="#c5d3e3" font-size="14">Required checks</text>
+    </g>
+    <g transform="translate(552 411)">
+      <rect width="148" height="90" rx="10" fill="#203c40" stroke="#4e8176"/>
+      <text x="14" y="31" fill="#f3f7fc" font-size="18" font-weight="650">Test + iterate</text>
+      <text x="14" y="61" fill="#c5d3e3" font-size="14">Evidence + fixes</text>
+    </g>
+    <g transform="translate(724 411)">
+      <rect width="148" height="90" rx="10" fill="#21364a" stroke="#4b708d"/>
+      <text x="14" y="31" fill="#f3f7fc" font-size="18" font-weight="650">Document</text>
+      <text x="14" y="61" fill="#c5d3e3" font-size="14">Then commit*</text>
+    </g>
+    <g transform="translate(896 411)">
+      <rect width="148" height="90" rx="10" fill="#302c45" stroke="#9b82bd" stroke-dasharray="5 4"/>
+      <text x="14" y="31" fill="#f3f7fc" font-size="18" font-weight="650">Deploy*</text>
+      <text x="14" y="61" fill="#d7c6eb" font-size="14">Validate + dry run</text>
+    </g>
+    <g stroke="#92abc2" stroke-width="1.5" marker-end="url(#arrow)">
+      <path d="M188 454 H201"/>
+      <path d="M360 454 H373"/>
+      <path d="M532 454 H545"/>
+      <path d="M704 454 H717"/>
+      <path d="M876 454 H889"/>
+    </g>
+    <text x="36" y="547" fill="#c5d3e3" font-size="15">* Skip commits with --no-commit. Deploy only with --deploy. Live verification gaps stay visible.</text>
+  </g>
+</svg>

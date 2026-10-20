@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Build SuiteReact App'
+  short_description: 'Build, test, and optionally deploy a SuiteReact app'
+  default_prompt: 'Use $suitereact-full-cycle to build or update a SuiteReact app from my goal.'

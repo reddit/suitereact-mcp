@@ -1,0 +1,140 @@
+{
+  "metadata": {
+    "version": "2.0.0",
+    "description": "Freeform React + MUI patterns for SuiteReact apps (no grid-schema layouts)"
+  },
+  "dataFetching": {
+    "restPostServerAction": {
+      "title": "Call a server action with REST.post",
+      "description": "Low-level hosted-Suitelet pattern. Prefer handleRestletAction for clients that also run under Vite.",
+      "code": "import { useCallback, useState } from 'react';\nimport { Button, Stack, Typography } from '@mui/material';\nimport { REST } from 'suitereact';\n\ntype LoadResult = { rows: Record<string, unknown>[] };\n\nexport function CustomerLookupPanel() {\n  const [loading, setLoading] = useState(false);\n  const [error, setError] = useState<string | null>(null);\n  const [rows, setRows] = useState<Record<string, unknown>[]>([]);\n\n  const load = useCallback(async () => {\n    setLoading(true);\n    setError(null);\n\n    try {\n      const { data, error: requestError } = await REST.post({\n        action: 'getTableRowsFromSuiteql',\n        data: {\n          query:\n            \"SELECT id, companyname FROM customer WHERE isinactive = 'F' AND RowNum <= 50\",\n        },\n      });\n\n      if (requestError) throw requestError;\n      setRows(((data as LoadResult | null)?.rows ?? []));\n    } catch (requestError) {\n      setError(\n        requestError instanceof Error ? requestError.message : 'Unable to load customers'\n      );\n    } finally {\n      setLoading(false);\n    }\n  }, []);\n\n  return (\n    <Stack spacing={2}>\n      <Button variant=\"contained\" onClick={load} disabled={loading}>\n        {loading ? 'Loading…' : 'Load customers'}\n      </Button>\n      {error && <Typography color=\"error\">{error}</Typography>}\n      <Typography variant=\"body2\">{rows.length} row(s)</Typography>\n    </Stack>\n  );\n}",
+      "notes": [
+        "action must match an exported function name in sdf/actions (wired through the RESTlet handler).",
+        "data is arbitrary JSON; keep payloads explicit and typed on both client and server.",
+        "REST.post unwraps the handler transport envelope once. Treat data as the action DTO; do not expect another success/data wrapper."
+      ],
+      "relatedSamples": ["handleRestletDevProxy", "themeCustomization"]
+    },
+    "handleRestletDevProxy": {
+      "title": "handleRestletAction + VITE_PROXY_SERVER_BASE_URL (local dev)",
+      "description": "Same server action as production, but routes through the local proxy during Vite dev.",
+      "code": "import { handleRestletAction } from 'suitereact';\n\ninterface EmailStatementRequest {\n  customerId: string;\n  recipientEmail: string;\n}\n\ninterface EmailStatementResponse {\n  message: string;\n}\n\nconst proxyBase = import.meta.env.DEV\n  ? import.meta.env.VITE_PROXY_SERVER_BASE_URL\n  : undefined;\nconst proxyToken = import.meta.env.DEV\n  ? import.meta.env.VITE_PROXY_SERVER_TOKEN\n  : undefined;\n\nexport async function emailStatement(\n  payload: EmailStatementRequest\n): Promise<EmailStatementResponse> {\n  return handleRestletAction<EmailStatementResponse>(\n    'sendStatementEmail',\n    payload,\n    proxyBase,\n    proxyToken\n  );\n}\n\n// Production: proxyBase is undefined and handleRestletAction uses REST.post.\n// Local dev: set VITE_PROXY_SERVER_BASE_URL=http://localhost:3001, set the matching VITE_PROXY_SERVER_TOKEN, and run `npm run server`.",
+      "notes": [
+        "Start the proxy: npm run server (from monorepo root).",
+        "Ensure .env.development.local in the app lists VITE_PROXY_SERVER_BASE_URL and VITE_PROXY_SERVER_TOKEN for authenticated local NetSuite round-trips."
+      ],
+      "relatedSamples": ["restPostServerAction", "toastNotifications"]
+    }
+  },
+  "mui": {
+    "dataGridBasic": {
+      "title": "MUI X DataGrid — columns, sort, filter",
+      "description": "Use @mui/x-data-grid directly for freeform tables with client-side or server-side data.",
+      "code": "import { useState } from 'react';\nimport { Box } from '@mui/material';\nimport { DataGrid, type GridColDef } from '@mui/x-data-grid';\n\nconst columns: GridColDef[] = [\n  { field: 'id', headerName: 'ID', width: 90 },\n  { field: 'name', headerName: 'Name', flex: 1, minWidth: 160 },\n  {\n    field: 'amount',\n    headerName: 'Amount',\n    type: 'number',\n    width: 120,\n    valueFormatter: (value: number | null) =>\n      value == null ? '' : value.toLocaleString(),\n  },\n];\n\nexport function OrdersGrid({\n  rows,\n}: {\n  rows: { id: number; name: string; amount: number }[];\n}) {\n  const [sortModel, setSortModel] = useState([\n    { field: 'name', sort: 'asc' as const },\n  ]);\n  const [filterModel, setFilterModel] = useState({\n    items: [] as { field: string; operator: string; value?: string }[],\n  });\n\n  return (\n    <Box sx={{ height: 480, width: '100%' }}>\n      <DataGrid\n        rows={rows}\n        columns={columns}\n        sortModel={sortModel}\n        onSortModelChange={setSortModel}\n        filterModel={filterModel}\n        onFilterModelChange={setFilterModel}\n        showToolbar\n        slotProps={{ toolbar: { showQuickFilter: true } }}\n        pageSizeOptions={[10, 25, 50]}\n        disableRowSelectionOnClick\n      />\n    </Box>\n  );\n}",
+      "notes": [
+        "For server-side pagination/sort/filter, use the DataGrid Pro API or controlled models with REST callbacks.",
+        "NsReactDataGrid in suitereact adds NetSuite-specific sources—use it when you need those integrations.",
+        "IMPORTANT: When columns come from dynamic server data (e.g. SuiteQL), use buildColumnTypeMap + applyColumnTypes + convertRowValues from suitereact to auto-detect date/number types. See dataGridAutoTypes sample."
+      ],
+      "relatedSamples": [
+        "dataGridAutoTypes",
+        "filterBarWithMUI",
+        "restPostServerAction"
+      ]
+    },
+    "dataGridAutoTypes": {
+      "title": "Auto-detect DataGrid column types from row data",
+      "description": "Use buildColumnTypeMap, applyColumnTypes, and convertRowValues from suitereact to dynamically infer column types (date, number, string) from server data. This enables proper date pickers in filters, numeric sorting, and locale-formatted numbers in MUI DataGrid.",
+      "code": "import { useMemo } from 'react';\nimport { Box } from '@mui/material';\nimport { DataGrid, type GridColDef } from '@mui/x-data-grid';\nimport {\n  applyColumnTypes,\n  buildColumnTypeMap,\n  convertRowValues,\n} from 'suitereact';\n\nconst baseColumns: GridColDef[] = [\n  { field: 'id', headerName: 'ID', width: 90 },\n  { field: 'companyname', headerName: 'Company', flex: 1 },\n  { field: 'foreigntotal', headerName: 'Total', width: 130 },\n  { field: 'datecreated', headerName: 'Created', width: 140 },\n];\n\ninterface Props {\n  rows: Record<string, unknown>[];\n}\n\nexport function AutoTypedGrid({ rows }: Props) {\n  const typeMap = useMemo(\n    () => buildColumnTypeMap(baseColumns.map(column => column.field), rows),\n    [rows]\n  );\n  const typedColumns = useMemo(\n    () => applyColumnTypes(baseColumns, typeMap),\n    [typeMap]\n  );\n  const typedRows = useMemo(() => convertRowValues(rows, typeMap), [rows, typeMap]);\n\n  return (\n    <Box sx={{ height: 500, width: '100%' }}>\n      <DataGrid rows={typedRows} columns={typedColumns} />\n    </Box>\n  );\n}",
+      "notes": [
+        "buildColumnTypeMap samples up to 30 rows per column. It detects M/D/YYYY, MM/DD/YYYY, and YYYY-MM-DD as date; finite numeric values as number; everything else as string.",
+        "applyColumnTypes sets GridColDef.type and adds a valueFormatter for dates. It works with any object that has a 'field' property.",
+        "convertRowValues converts date strings to Date objects and numeric strings to numbers so DataGrid filters and sorting work natively.",
+        "ALWAYS use these three functions together when displaying dynamic/server-sourced data in a DataGrid. They are especially important for NetSuite data where dates come as 'M/D/YYYY' strings.",
+        "For static/known columns, you can skip inference and set type: 'date' or type: 'number' directly on the GridColDef."
+      ],
+      "relatedSamples": ["dataGridBasic", "handleRestletDevProxy"]
+    },
+    "themeCustomization": {
+      "title": "Theme (theme.ts) + ThemeProvider",
+      "description": "Centralize MUI theme; import into App.tsx.",
+      "code": "import { createTheme } from '@mui/material/styles';\n\nexport const appTheme = createTheme({\n  palette: {\n    primary: { main: '#02315c' },\n    secondary: { main: '#616f74' },\n  },\n  typography: {\n    fontFamily: '\"Roboto\", \"Helvetica\", \"Arial\", sans-serif',\n    h5: { fontWeight: 600 },\n  },\n  components: {\n    MuiButton: { defaultProps: { disableElevation: true } },\n  },\n});\n\n// App.tsx\n// import { ThemeProvider, CssBaseline } from '@mui/material';\n// <ThemeProvider theme={appTheme}><CssBaseline />...</ThemeProvider>",
+      "notes": [
+        "Override component defaults under components.Mui* for consistent app-wide styling.",
+        "Use CssBaseline for consistent baseline styles across browsers."
+      ],
+      "relatedSamples": ["multiTabLayout", "toastNotifications"]
+    },
+    "multiTabLayout": {
+      "title": "Multi-tab layout with MUI Tabs",
+      "description": "Keep each tab’s content in separate components or lazy-loaded chunks.",
+      "code": "import { useState, SyntheticEvent } from 'react';\nimport { Box, Tab, Tabs, Paper } from '@mui/material';\n\ninterface TabPanelProps { children?: React.ReactNode; index: number; value: number; }\nfunction TabPanel({ children, value, index }: TabPanelProps) {\n  if (value !== index) return null;\n  return <Box sx={{ pt: 2 }}>{children}</Box>;\n}\n\nexport function MainTabs() {\n  const [tab, setTab] = useState(0);\n  const onChange = (_: SyntheticEvent, v: number) => setTab(v);\n\n  return (\n    <Paper sx={{ p: 2 }}>\n      <Tabs value={tab} onChange={onChange}>\n        <Tab label=\"Overview\" />\n        <Tab label=\"Details\" />\n        <Tab label=\"History\" />\n      </Tabs>\n      <TabPanel value={tab} index={0}>…</TabPanel>\n      <TabPanel value={tab} index={1}>…</TabPanel>\n      <TabPanel value={tab} index={2}>…</TabPanel>\n    </Paper>\n  );\n}",
+      "notes": [
+        "Use tab value state in the parent; avoid remounting heavy trees by memoizing panel bodies."
+      ],
+      "relatedSamples": ["filterBarWithMUI"]
+    },
+    "filterBarWithMUI": {
+      "title": "Filter bar with TextField and Select",
+      "description": "Controlled MUI fields plus an environment-transparent server action call and visible error state.",
+      "code": "import { useCallback, useState } from 'react';\nimport { Alert, Button, MenuItem, Stack, TextField } from '@mui/material';\nimport { handleRestletAction } from 'suitereact';\n\nconst proxyBase = import.meta.env.DEV\n  ? import.meta.env.VITE_PROXY_SERVER_BASE_URL\n  : undefined;\nconst proxyToken = import.meta.env.DEV\n  ? import.meta.env.VITE_PROXY_SERVER_TOKEN\n  : undefined;\n\nexport function TransactionFilters() {\n  const [search, setSearch] = useState('');\n  const [status, setStatus] = useState('open');\n  const [loading, setLoading] = useState(false);\n  const [error, setError] = useState<string | null>(null);\n\n  const apply = useCallback(async () => {\n    setLoading(true);\n    setError(null);\n\n    try {\n      await handleRestletAction(\n        'runFilteredTransactionQuery',\n        { search, status },\n        proxyBase,\n        proxyToken\n      );\n    } catch (requestError) {\n      setError(\n        requestError instanceof Error\n          ? requestError.message\n          : 'Unable to load transactions'\n      );\n    } finally {\n      setLoading(false);\n    }\n  }, [search, status]);\n\n  return (\n    <Stack spacing={2}>\n      <Stack\n        direction={{ xs: 'column', sm: 'row' }}\n        spacing={2}\n        alignItems=\"center\"\n      >\n        <TextField\n          label=\"Search\"\n          value={search}\n          onChange={event => setSearch(event.target.value)}\n          size=\"small\"\n        />\n        <TextField\n          select\n          label=\"Status\"\n          value={status}\n          onChange={event => setStatus(event.target.value)}\n          size=\"small\"\n          sx={{ minWidth: 140 }}\n        >\n          <MenuItem value=\"open\">Open</MenuItem>\n          <MenuItem value=\"paid\">Paid</MenuItem>\n        </TextField>\n        <Button variant=\"contained\" onClick={apply} disabled={loading}>\n          Apply\n        </Button>\n      </Stack>\n      {error && <Alert severity=\"error\">{error}</Alert>}\n    </Stack>\n  );\n}",
+      "notes": [
+        "Debounce search fields if they trigger network calls on every keystroke.",
+        "Reset pagination when filters change if results are paged."
+      ],
+      "relatedSamples": ["dataGridBasic", "restPostServerAction"]
+    }
+  },
+  "suiteReact": {
+    "toastNotifications": {
+      "title": "ToastProvider + useToastHelpers",
+      "description": "Wrap the tree with ToastProvider; show feedback from event handlers.",
+      "code": "import { ToastProvider, useToastHelpers } from 'suitereact';\nimport { Button } from '@mui/material';\n\nfunction DemoInner() {\n  const toast = useToastHelpers();\n  return (\n    <Button\n      onClick={() => toast.showSuccess('Saved', 3000)}\n    >\n      Save\n    </Button>\n  );\n}\n\nexport function DemoWithToasts() {\n  return (\n    <ToastProvider>\n      <DemoInner />\n    </ToastProvider>\n  );\n}",
+      "notes": [
+        "toastService (imperative) exists for edge cases outside React render trees.",
+        "Duration is in milliseconds."
+      ],
+      "relatedSamples": ["chatbotPanelStructured", "restPostServerAction"]
+    },
+    "chatbotPanelStructured": {
+      "title": "NsReactChatbot — panel variant + onStructuredResponse",
+      "description": "Fixed bottom panel chat with Zod-typed structured output; handle JSON in React state.",
+      "code": "import { useCallback, useState } from 'react';\nimport { Box, Paper, Typography } from '@mui/material';\nimport { z } from 'zod';\nimport { NsReactChatbot } from 'suitereact';\n\nconst proxyBase = import.meta.env.DEV\n  ? import.meta.env.VITE_PROXY_SERVER_BASE_URL\n  : undefined;\nconst proxyToken = import.meta.env.DEV\n  ? import.meta.env.VITE_PROXY_SERVER_TOKEN\n  : undefined;\n\nconst QuerySchema = z.object({\n  suggestedQuery: z.string(),\n  confidence: z.number(),\n});\n\nexport function QueryAssistantDock() {\n  const [structured, setStructured] = useState<z.infer<typeof QuerySchema> | null>(null);\n\n  const onStructuredResponse = useCallback((data: unknown) => {\n    const parsed = QuerySchema.safeParse(data);\n    if (parsed.success) setStructured(parsed.data);\n  }, []);\n\n  return (\n    <>\n      <Paper sx={{ p: 2, mb: 10 }}>\n        <Typography variant=\"subtitle2\">Last structured result</Typography>\n        <Typography variant=\"body2\" component=\"pre\" sx={{ whiteSpace: 'pre-wrap' }}>\n          {structured ? JSON.stringify(structured, null, 2) : '—'}\n        </Typography>\n      </Paper>\n      <Box>\n        <NsReactChatbot\n          id=\"suiteql-bot\"\n          title=\"Ask SuiteQL\"\n          variant=\"panel\"\n          defaultExpanded={false}\n          structuredOutput={{ name: 'query', schema: QuerySchema }}\n          onStructuredResponse={onStructuredResponse}\n          apiBaseUrl={proxyBase}\n          apiToken={proxyToken}\n        />\n      </Box>\n    </>\n  );\n}",
+      "notes": [
+        "Prefer onStructuredResponse over deprecated onResponse/handleAction.",
+        "variant='panel' suits assistants that should not consume main content width.",
+        "Keep schema in domain/types.ts for reuse between UI and prompts.",
+        "Install zod in the app and pass the development-only proxyBase during local development."
+      ],
+      "relatedSamples": ["restPostServerAction", "themeCustomization"]
+    }
+  },
+  "server": {
+    "suiteQlServerAction": {
+      "title": "Typed SuiteQL server action",
+      "description": "Validate a typed payload, execute parameterized SuiteQL, return a DTO, and let the RESTlet own the transport envelope.",
+      "code": "import * as log from 'N/log';\nimport * as query from 'N/query';\n\ninterface LoadInvoicesRequest {\n  customerId: string;\n}\n\ninterface InvoiceRow {\n  id: number;\n  tranid: string;\n  trandate: string;\n  amount: number;\n}\n\ninterface LoadInvoicesResponse {\n  rows: InvoiceRow[];\n  count: number;\n}\n\nexport const loadInvoices = (\n  props: LoadInvoicesRequest\n): LoadInvoicesResponse => {\n  try {\n    const customerId = Number(props.customerId);\n    if (!Number.isInteger(customerId) || customerId <= 0) {\n      throw new Error('customerId must be a positive integer');\n    }\n\n    const rows = query\n      .runSuiteQL({\n        query:\n          \"SELECT id, tranid, trandate, foreigntotal AS amount FROM transaction WHERE type = 'CustInvc' AND entity = ? AND RowNum <= 100\",\n        params: [customerId],\n      })\n      .asMappedResults() as unknown as InvoiceRow[];\n\n    return { rows, count: rows.length };\n  } catch (error) {\n    log.error('loadInvoices failed', error);\n    throw error;\n  }\n};",
+      "notes": [
+        "Test the SuiteQL with execute_suiteql_query before embedding it in the action.",
+        "Use query parameters for user input; do not concatenate values into SuiteQL.",
+        "Return the action DTO directly or throw. sr_rl_rct_action_handler adds the outer success/data/error envelope.",
+        "After editing the action, deploy the exact compiled action file and test it directly with npm run test:action -- loadInvoices --data '{\"customerId\":\"123\"}'."
+      ],
+      "relatedSamples": ["handleRestletDevProxy", "dataGridAutoTypes"]
+    }
+  },
+  "performance": {
+    "blobZipExport": {
+      "title": "Blob-based client zip generation for PDFs/files",
+      "description": "Use this for browser-assembled zip exports. It avoids JSZip + atob loops and keeps file payloads out of React state.",
+      "code": "import { BlobReader, BlobWriter, ZipWriter } from '@zip.js/zip.js';\n\ntype ExportFile = {\n  fileName: string;\n  dataUrl: string;\n};\n\nasync function dataUrlToBlob(dataUrl: string): Promise<Blob> {\n  const response = await fetch(dataUrl);\n  return response.blob();\n}\n\nexport async function buildZip(files: ExportFile[]): Promise<Blob> {\n  const zipWriter = new ZipWriter(new BlobWriter('application/zip'), {\n    bufferedWrite: true,\n  });\n\n  try {\n    for (const file of files) {\n      const blob = await dataUrlToBlob(file.dataUrl);\n      await zipWriter.add(file.fileName, new BlobReader(blob));\n    }\n\n    return await zipWriter.close();\n  } catch (error) {\n    await zipWriter.close().catch(() => undefined);\n    throw error;\n  }\n}\n\nexport function downloadBlob(blob: Blob, fileName: string) {\n  const url = URL.createObjectURL(blob);\n  const anchor = document.createElement('a');\n  anchor.href = url;\n  anchor.download = fileName;\n  anchor.style.display = 'none';\n  document.body.appendChild(anchor);\n\n  try {\n    anchor.click();\n  } finally {\n    anchor.remove();\n    URL.revokeObjectURL(url);\n  }\n}",
+      "notes": [
+        "Install @zip.js/zip.js in the app when client-side zip generation is needed.",
+        "Use bufferedWrite for BlobWriter output and keep the temporary anchor attached for reliable browser downloads.",
+        "Prefer Blob/ArrayBuffer inputs from the server. Convert data URLs only when the RESTlet cannot avoid them.",
+        "For large batches, update progress between files and cap any upstream NetSuite/PDF generation concurrency."
+      ],
+      "relatedSamples": ["handleRestletDevProxy", "restPostServerAction"]
+    }
+  }
+}

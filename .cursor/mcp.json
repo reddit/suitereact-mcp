@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "suitereact-mcp": {
+      "command": "node",
+      "args": ["mcp/dist/index.js"]
+    },
+    "suitereact-test-automation": {
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@0.0.80",
+        "--user-data-dir",
+        ".suitereact-testing/profile",
+        "--output-dir",
+        ".suitereact-testing/screenshots"
+      ]
+    }
+  }
+}

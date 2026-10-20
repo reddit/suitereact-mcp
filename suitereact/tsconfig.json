@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "declaration": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "declarationMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "suitereact": ["src/index.tsx"],
+      "N": ["../node_modules/@hitc/netsuite-types/N"],
+      "N/*": ["../node_modules/@hitc/netsuite-types/N/*"]
+    },
+    "typeRoots": ["../node_modules/@types", "src/types", "src/index.d.ts"]
+  },
+  "include": ["src", "package.json"],
+  "exclude": ["src/legacy"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
