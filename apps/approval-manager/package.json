@@ -30,7 +30,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",
-    "@mui/x-data-grid": "^8.6.0",
+    "@mui/x-data-grid": "^8.29.5",
     "axios": "^1.15.0",
     "dayjs": "^1.11.10",
     "suitereact": "file:../../suitereact",
