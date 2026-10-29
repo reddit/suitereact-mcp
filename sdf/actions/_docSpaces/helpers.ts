@@ -166,6 +166,26 @@ export const getListText = (rec: record.Record, fieldId: string): string => {
 };
 
 /**
+ * Like getListText, but resolves the stored list id through SuiteQL when the
+ * record refuses getText. Standard-mode records in user events throw on
+ * getText for values written with setText or setValue.
+ */
+export const getListValueText = (
+  rec: record.Record,
+  fieldId: string,
+  listId: string
+): string => {
+  const text = getListText(rec, fieldId);
+  if (text) return text;
+  const id = Number(rec.getValue({ fieldId }));
+  if (!Number.isSafeInteger(id) || id <= 0) return '';
+  const rows = getResultsFromSuiteQl(
+    `SELECT name FROM ${listId} WHERE id = ${id}`
+  );
+  return String(rows[0]?.name ?? '').toLowerCase();
+};
+
+/**
  * Searches the customrecord_sr_space table by slug. Returns the record id or null.
  */
 export const findSpaceIdBySlug = (slug: string): string | null => {

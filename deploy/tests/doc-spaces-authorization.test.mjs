@@ -441,3 +441,45 @@ test('empty or partly invalid group rules never degrade into all-employee member
     );
   }
 });
+
+test('grant target types resolve when the record refuses getText', () => {
+  const queries = [];
+  const { getListValueText } = loadModule('sdf/actions/_docSpaces/helpers.ts', {
+    'N/runtime': {},
+    'N/record': {},
+    'N/file': {},
+    'N/search': {},
+    '../../utils/nsQueryUtils': {
+      getResultsFromSuiteQl: sql => {
+        queries.push(sql);
+        return [{ name: 'Space' }];
+      },
+    },
+  });
+  // NetSuite throws SSS_INVALID_API_USAGE here for standard-mode user events.
+  const rec = {
+    getText: () => {
+      throw new Error('SSS_INVALID_API_USAGE');
+    },
+    getValue: () => '1',
+  };
+  assert.equal(
+    getListValueText(
+      rec,
+      'custrecord_perm_target_type',
+      'customlist_sr_perm_target'
+    ),
+    'space'
+  );
+  assert.deepEqual(queries, [
+    'SELECT name FROM customlist_sr_perm_target WHERE id = 1',
+  ]);
+  assert.equal(
+    getListValueText(
+      { ...rec, getValue: () => '1 OR 1=1' },
+      'custrecord_perm_target_type',
+      'customlist_sr_perm_target'
+    ),
+    ''
+  );
+});
