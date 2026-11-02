@@ -13,6 +13,7 @@ import {
   buildEmployeeSuiteQL,
   currentEmployeeId,
   evaluateAccess,
+  getListValueText,
   levelRank,
   SR_DOC,
   SR_DYNGROUP,
@@ -78,9 +79,11 @@ export const beforeSubmit: EntryPoints.UserEvent.beforeSubmit = context => {
       // Grants are added or revoked, never retargeted or edited in place.
       if (!creating && !deleting) deny();
       const source = creating ? next : previous!;
-      const targetType = String(
-        source.getText({ fieldId: 'custrecord_perm_target_type' })
-      ).toLowerCase();
+      const targetType = getListValueText(
+        source,
+        'custrecord_perm_target_type',
+        'customlist_sr_perm_target'
+      );
       if (targetType !== 'space' && targetType !== 'doc') deny();
       requireAccess(
         targetType as TargetType,
