@@ -20,7 +20,7 @@
     "validate:scaffolds": "node ../deploy/validate-generated-scaffolds.mjs"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.15.0",
+    "@modelcontextprotocol/sdk": "^1.32.2",
     "dotenv": "^17.1.0",
     "openai": "4.104.0",
     "zod": "3.25.76"
